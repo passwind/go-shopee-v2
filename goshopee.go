@@ -59,14 +59,15 @@ type Client struct {
 
 	RateLimits RateLimitInfo
 
-	ShopID uint64
-	AccountID uint64
+	ShopID int64
+	AccountID int64
 	AccessToken string
 
 	// Services used for communicating with the API
 	Util UtilService
 	Auth AuthService
 	Media MediaSpaceService
+	Product ProductService
 }
 
 // NewClient returns a new Shopify API client with an already authenticated shopname and
@@ -89,6 +90,7 @@ func NewClient(app App, opts ...Option) *Client {
 	c.Util = &UtilServiceOp{client: c}
 	c.Auth = &AuthServiceOp{client: c}
 	c.Media=&MediaSpaceServiceOp{client: c}
+	c.Product=&ProductServiceOp{client: c}
 	
 	// apply any options
 	for _, opt := range opts {
@@ -225,13 +227,13 @@ func (c *Client) NewRequest(method, relPath string, body, options, headers inter
 	return req, nil
 }
 
-func (c *Client)WithShop(sid uint64, tok string) *Client {
+func (c *Client)WithShop(sid int64, tok string) *Client {
 	c.ShopID=sid
 	c.AccessToken=tok
 	return c
 }
 
-func (c *Client)WithMerchant(aid uint64, tok string) *Client {
+func (c *Client)WithMerchant(aid int64, tok string) *Client {
 	c.AccountID=aid
 	c.AccessToken=tok
 	return c
@@ -387,7 +389,7 @@ func (c *Client) logResponse(res *http.Response) {
 }
 
 func (c *Client) logBody(body *io.ReadCloser, format string) {
-	if body == nil {
+	if body == nil || *body==nil{
 		return
 	}
 	b, _ := ioutil.ReadAll(*body)
@@ -468,11 +470,12 @@ func (c *Client) createAndDoGetHeaders(method, relPath string, data, options, he
 	}
 
 	if contentType=="application/json" {
-		// TODO: if body == nil error
-		params := data.(map[string]interface{})
-		params["partner_id"] = c.app.PartnerID
-		// params["timestamp"] = time.Now().Unix()
-		data=params
+		if data != nil {
+			params := data.(map[string]interface{})
+			params["partner_id"] = c.app.PartnerID
+			// params["timestamp"] = time.Now().Unix()
+			data=params
+		}
 	}
 
 	req, err := c.NewRequest(method, relPath, data, options, headers)

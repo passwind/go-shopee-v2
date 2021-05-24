@@ -12,6 +12,9 @@ import (
 
 const (
 	maxRetries     = 3
+	shopID = 1234567
+	merchantID = 0
+	accessToken = "accesstoken"
 )
 
 var (

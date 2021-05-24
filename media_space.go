@@ -18,7 +18,7 @@ type MediaSpaceService interface {
 type UploadImageResponse struct {
 	BaseResponse
 
-	Response *UploadImageResponseData `json:"response"`
+	Response UploadImageResponseData `json:"response"`
 }
 
 type UploadImageResponseData struct {

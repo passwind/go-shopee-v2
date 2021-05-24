@@ -1,0 +1,17 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "aaaaaaa",
+  "response": {
+    "category_list": [
+      {
+        "category_id": 123,
+        "parent_category_id": 456,
+        "original_category_name": "aaa",
+        "display_category_name": "bbb",
+        "has_children": false
+      }
+    ]
+  }
+}
