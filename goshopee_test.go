@@ -1,6 +1,9 @@
 package goshopee
 
 import (
+	"fmt"
+	"io/ioutil"
+
 	"github.com/caarlos0/env"
 	"github.com/jarcoal/httpmock"
 	"github.com/joho/godotenv"
@@ -8,7 +11,6 @@ import (
 )
 
 const (
-	testApiVersion = "9999-99"
 	maxRetries     = 3
 )
 
@@ -31,11 +33,18 @@ func setup() {
 		env.Parse(&app)
 	}
 	client = NewClient(app, 
-		WithVersion(testApiVersion),
 		WithRetry(maxRetries))
 	httpmock.ActivateNonDefault(client.Client)
 }
 
 func teardown() {
 	httpmock.DeactivateAndReset()
+}
+
+func loadFixture(filename string) []byte {
+	f, err := ioutil.ReadFile("fixtures/" + filename)
+	if err != nil {
+		panic(fmt.Sprintf("Cannot load fixture %v", filename))
+	}
+	return f
 }

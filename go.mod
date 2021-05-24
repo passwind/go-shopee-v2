@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
+	github.com/google/go-querystring v1.1.0
 	github.com/jarcoal/httpmock v1.0.8
 	github.com/joho/godotenv v1.3.0
 	github.com/prometheus/common v0.25.0
