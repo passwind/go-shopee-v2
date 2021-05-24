@@ -1,0 +1,49 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "5827696b761ca5193f216ca1f7d70250",
+  "response": {
+    "image_info": {
+      "image_id": "e721546cbfafcb14ac6ae6c7cf57e455",
+      "image_url_list": [
+        {
+          "image_url_region": "in",
+          "image_url": "https://cf.shopee.in/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        },
+        {
+          "image_url_region": "my",
+          "image_url": "https://cf.shopee.com.my/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        },
+        {
+          "image_url_region": "id",
+          "image_url": "https://cf.shopee.co.id/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        },
+        {
+          "image_url_region": "sg",
+          "image_url": "https://cf.shopee.sg/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        },
+        {
+          "image_url_region": "tw",
+          "image_url": "https://s-cf-tw.shopeesz.com/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        },
+        {
+          "image_url_region": "br",
+          "image_url": "https://cf.shopee.com.br/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        },
+        {
+          "image_url_region": "vn",
+          "image_url": "https://cf.shopee.vn/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        },
+        {
+          "image_url_region": "ph",
+          "image_url": "https://cf.shopee.ph/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        },
+        {
+          "image_url_region": "th",
+          "image_url": "https://cf.shopee.co.th/file/e721546cbfafcb14ac6ae6c7cf57e455"
+        }
+      ]
+    }
+  }
+}

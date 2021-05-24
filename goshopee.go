@@ -66,15 +66,7 @@ type Client struct {
 	// Services used for communicating with the API
 	Util UtilService
 	Auth AuthService
-
-	// Shop          ShopService
-	// Item          ItemService
-	// Variation     VariationService
-	// ItemCategory  ItemCategoryService
-	// ItemAttribute ItemAttributeService
-	// Order         OrderService
-	// Logistic      LogisticService
-	// Discount DiscountService
+	Media MediaSpaceService
 }
 
 // NewClient returns a new Shopify API client with an already authenticated shopname and
@@ -96,6 +88,7 @@ func NewClient(app App, opts ...Option) *Client {
 
 	c.Util = &UtilServiceOp{client: c}
 	c.Auth = &AuthServiceOp{client: c}
+	c.Media=&MediaSpaceServiceOp{client: c}
 	
 	// apply any options
 	for _, opt := range opts {
@@ -166,7 +159,7 @@ type RateLimitError struct {
 // be resolved to the BaseURL of the Client. Relative URLS should always be
 // specified without a preceding slash. If specified, the value pointed to by
 // body is JSON encoded and included as the request body.
-func (c *Client) NewRequest(method, relPath string, body, options interface{}) (*http.Request, error) {
+func (c *Client) NewRequest(method, relPath string, body, options, headers interface{}) (*http.Request, error) {
 	rel, err := url.Parse(relPath)
 	if err != nil {
 		return nil, err
@@ -174,6 +167,16 @@ func (c *Client) NewRequest(method, relPath string, body, options interface{}) (
 
 	// Make the full url based on the relative path
 	u := c.baseURL.ResolveReference(rel)
+
+	contentType:="application/json"
+	var headerOptions map[string]string
+
+	if headers!=nil {
+		headerOptions=headers.(map[string]string)
+		if v,ok:=headerOptions["Content-Type"];ok{
+			contentType=v
+		}
+	}
 
 	// Add custom options
 	if options != nil {
@@ -191,25 +194,33 @@ func (c *Client) NewRequest(method, relPath string, body, options interface{}) (
 	}
 
 	// A bit of JSON ceremony
-	var js []byte = nil
-
+	var bodyReader io.Reader
+	var signBody string
 	if body != nil {
-		js, err = json.Marshal(body)
-		if err != nil {
-			return nil, err
+		if contentType=="application/json" {
+			var js []byte = nil
+			js, err = json.Marshal(body)
+			if err != nil {
+				return nil, err
+			}
+			bodyReader=bytes.NewBuffer(js)
+
+			// signBody=string(js)
+		} else {			
+			bodyReader=body.(io.Reader)
 		}
 	}
 
-	req, err := http.NewRequest(method, u.String(), bytes.NewBuffer(js))
+	req, err := http.NewRequest(method, u.String(), bodyReader)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("User-Agent", UserAgent)
 
-	c.makeSignature(req, string(js))
+	c.makeSignature(req, signBody)
 
 	return req, nil
 }
@@ -422,7 +433,7 @@ func CheckResponseError(r *http.Response) error {
 // The options argument is used for specifying request options such as search
 // parameters like created_at_min
 // Any data returned from Shopify will be marshalled into resource argument.
-func (c *Client) CreateAndDo(method, relPath string, data, options, resource interface{}) error {
+func (c *Client) CreateAndDo(method, relPath string, data, options, headers, resource interface{}) error {
 	defer func(){
 		// clear for next call
 		c.ShopID=0
@@ -430,7 +441,7 @@ func (c *Client) CreateAndDo(method, relPath string, data, options, resource int
 		c.AccessToken=""
 	}()
 
-	_, err := c.createAndDoGetHeaders(method, relPath, data, options, resource)
+	_, err := c.createAndDoGetHeaders(method, relPath, data, options, headers, resource)
 	if err != nil {
 		return err
 	}
@@ -438,19 +449,33 @@ func (c *Client) CreateAndDo(method, relPath string, data, options, resource int
 }
 
 // createAndDoGetHeaders creates an executes a request while returning the response headers.
-func (c *Client) createAndDoGetHeaders(method, relPath string, data, options, resource interface{}) (http.Header, error) {
+func (c *Client) createAndDoGetHeaders(method, relPath string, data, options, headers, resource interface{}) (http.Header, error) {
 	if strings.HasPrefix(relPath, "/") {
 		// make sure it's a relative path
 		relPath = strings.TrimLeft(relPath, "/")
 	}
 
 	relPath = path.Join("api/v2", relPath)
-	// TODO: if body == nil error
-	params := data.(map[string]interface{})
-	params["partner_id"] = c.app.PartnerID
-	// params["timestamp"] = time.Now().Unix()
 
-	req, err := c.NewRequest(method, relPath, params, options)
+	contentType:="application/json"
+	var headerOptions map[string]string
+
+	if headers!=nil {
+		headerOptions=headers.(map[string]string)
+		if v,ok:=headerOptions["Content-Type"];ok{
+			contentType=v
+		}
+	}
+
+	if contentType=="application/json" {
+		// TODO: if body == nil error
+		params := data.(map[string]interface{})
+		params["partner_id"] = c.app.PartnerID
+		// params["timestamp"] = time.Now().Unix()
+		data=params
+	}
+
+	req, err := c.NewRequest(method, relPath, data, options, headers)
 	if err != nil {
 		return nil, err
 	}
@@ -461,23 +486,29 @@ func (c *Client) createAndDoGetHeaders(method, relPath string, data, options, re
 // Get performs a GET request for the given path and saves the result in the
 // given resource.
 func (c *Client) Get(path string, resource, options interface{}) error {
-	return c.CreateAndDo("GET", path, nil, options, resource)
+	return c.CreateAndDo("GET", path, nil, options, nil, resource)
 }
 
 // Post performs a POST request for the given path and saves the result in the
 // given resource.
 func (c *Client) Post(path string, data, resource interface{}) error {
-	return c.CreateAndDo("POST", path, data, nil, resource)
+	return c.CreateAndDo("POST", path, data, nil, nil, resource)
 }
 
 // Put performs a PUT request for the given path and saves the result in the
 // given resource.
 func (c *Client) Put(path string, data, resource interface{}) error {
-	return c.CreateAndDo("PUT", path, data, nil, resource)
+	return c.CreateAndDo("PUT", path, data, nil, nil, resource)
 }
 
 // Delete performs a DELETE request for the given path
 func (c *Client) Delete(path string) error {
-	return c.CreateAndDo("DELETE", path, nil, nil, nil)
+	return c.CreateAndDo("DELETE", path, nil, nil, nil, nil)
+}
+
+// Upload performs a Upload request for the given path and saves the result in the
+// given resource.
+func (c *Client) Upload(path string, data, headers, resource interface{}) error {
+	return c.CreateAndDo("POST", path, data, nil, headers, resource)
 }
 
