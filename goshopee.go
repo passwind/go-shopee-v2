@@ -350,7 +350,7 @@ func (c *Client) checkShopeeError(r *http.Response, bodyBytes []byte) error {
 		}
 
 		if serr.Error!="" {
-			return fmt.Errorf("Shopee Error: [%s] %s",serr.Error,serr.Message)
+			return fmt.Errorf("shopee_error: %s %s",serr.Error,serr.Message)
 		}
 	}
 
@@ -448,7 +448,7 @@ func (c *Client) createAndDoGetHeaders(method, relPath string, data, options, re
 	// TODO: if body == nil error
 	params := data.(map[string]interface{})
 	params["partner_id"] = c.app.PartnerID
-	params["timestamp"] = time.Now().Unix()
+	// params["timestamp"] = time.Now().Unix()
 
 	req, err := c.NewRequest(method, relPath, params, options)
 	if err != nil {
