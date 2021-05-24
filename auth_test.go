@@ -27,9 +27,7 @@ func Test_GetToken(t *testing.T) {
 	setup()
 	defer teardown()
 
-	apiurl:=fmt.Sprintf("%s/api/v2/auth/token/get",app.APIURL)
-
-	httpmock.RegisterResponder("POST", apiurl,
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/auth/token/get",app.APIURL),
 		httpmock.NewBytesResponder(200, loadFixture("access_token.json")))
 
 	res,err:=client.Auth.GetToken(123456,0,"testcode")
