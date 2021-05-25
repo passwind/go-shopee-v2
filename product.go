@@ -8,6 +8,7 @@ type ProductService interface {
 	SupportSizeChart(int64, int64, string) (*SupportSizeChartResponse, error)
 	UpdateSizeChart(int64, int64, string, string)(*UpdateSizeChartResponse, error)
 	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
+	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
 }
 
 type GetCategoryResponse struct {
@@ -308,6 +309,87 @@ func (s *ProductServiceOp)AddItem(sid int64,item AddItemRequest, tok string)(*Ad
 	path := "/product/add_item"
 	resp := new(AddItemResponse)
 	req,err:=StructToMap(item)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+type InitTierVariationRequest struct {
+	ItemID int64 `json:"item_id"`
+	TierVariation []TierVariation `json:"tier_variation"`
+	Model []Model `json:"model"`
+}
+
+type TierVariation struct {
+	Name string `json:"name"`
+	OptionList []TierVariationOption `json:"option_list"`
+}
+
+type TierVariationOption struct {
+	Option string `json:"option"`
+	Image TierVariationOptionImage `json:"image"`
+}
+
+type TierVariationOptionImage struct {
+	ImageID string `json:"image_id"`
+}
+
+type Model struct {
+	TierIndex []int `json:"tier_index"`
+	NormalStock int `json:"normal_stock"`
+	OriginalPrice float64 `json:"original_price"`
+	ModelSKU string `json:"model_sku"`
+}
+
+type InitTierVariationResponse struct {
+	BaseResponse
+
+	Response InitTierVariationResponseData `json:"response"`
+}
+
+type InitTierVariationResponseData struct {
+	ItemID int64 `json:"item_id"`
+	TierVariation []InitTierVariationResponseDataTierVariation `json:"tier_variation"`
+	Model []InitTierVariationResponseDataModel `json:"model"`
+}
+
+type InitTierVariationResponseDataTierVariation struct {
+	Name string `json:"name"`
+	OptionList []InitTierVariationResponseDataTierVariationTierVariationOption `json:"option_list"`
+}
+
+type InitTierVariationResponseDataTierVariationTierVariationOption struct {
+	Option string `json:"option"`
+	Image InitTierVariationResponseDataTierVariationTierVariationOptionImage `json:"image"`
+}
+
+type InitTierVariationResponseDataTierVariationTierVariationOptionImage struct {
+	ImageURL string `json:"image_url"`
+}
+
+type InitTierVariationResponseDataModel struct {
+	TierIndex []int `json:"tier_index"`
+	ModelID int64 `json:"model_id"`
+	ModelSKU string `json:"model_sku"`
+	StockInfo []StockInfo `json:"stock_info"`
+	PriceInfo []PriceInfo `json:"price_info"`
+}
+
+type StockInfo struct {
+	StockType int `json:"stock_type"`
+	NormalStock int `json:"normal_stock"`
+}
+
+type PriceInfo struct {
+	OriginalPrice float64 `json:"original_price"`
+}
+
+func (s *ProductServiceOp)InitTierVariation(sid int64,vars InitTierVariationRequest, tok string)(*InitTierVariationResponse, error) {
+	path := "/product/init_tier_variation"
+	resp := new(InitTierVariationResponse)
+	req,err:=StructToMap(vars)
 	if err!=nil {
 		return nil,err
 	}

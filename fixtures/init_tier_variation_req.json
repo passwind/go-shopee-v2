@@ -1,0 +1,26 @@
+{
+  "item_id": 1000,
+  "tier_variation": [
+    {
+      "name": "size",
+      "option_list": [
+        {
+          "option": "XL",
+          "image": {
+            "image_id": "xxxxxxx"
+          }
+        }
+      ]
+    }
+  ],
+  "model": [
+    {
+      "tier_index": [
+        0
+      ],
+      "normal_stock": 100,
+      "original_price": 11.11,
+      "model_sku": "abcd"
+    }
+  ]
+}

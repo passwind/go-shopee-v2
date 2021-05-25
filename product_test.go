@@ -154,3 +154,26 @@ func Test_AddItem(t *testing.T) {
 		t.Errorf("ItemID returned %+v, expected %+v", res.Response.ItemID , expectedID)
 	}
 }
+
+func Test_InitTierVariation(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/init_tier_variation",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("init_tier_variation_resp.json")))
+
+	var req InitTierVariationRequest
+	loadMockData("init_tier_variation_req.json",&req)
+
+	res,err:=client.Product.InitTierVariation(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Product.InitTierVariation error: %s",err)
+	}
+
+	t.Logf("Product.InitTierVariation: %#v",res)
+
+	var expectedID int64 = 12345
+	if res.Response.Model[0].ModelID != expectedID {
+		t.Errorf("ModelID returned %+v, expected %+v", res.Response.Model[0].ModelID , expectedID)
+	}
+}
