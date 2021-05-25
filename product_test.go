@@ -131,3 +131,26 @@ func Test_UpdateSizeChart(t *testing.T) {
 		t.Errorf("RequestID returned %+v, expected %+v",res.RequestID , expected)
 	}
 }
+
+func Test_AddItem(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/add_item",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("add_item_resp.json")))
+
+	var req AddItemRequest
+	loadMockData("add_item_req.json",&req)
+
+	res,err:=client.Product.AddItem(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Product.AddItem error: %s",err)
+	}
+
+	t.Logf("Product.AddItem: %#v",res)
+
+	var expectedID int64 = 3000142341
+	if res.Response.ItemID != expectedID {
+		t.Errorf("ItemID returned %+v, expected %+v", res.Response.ItemID , expectedID)
+	}
+}

@@ -7,6 +7,7 @@ type ProductService interface {
 	GetAttributes(int64, int64, string, string) (*GetAttributesResponse, error)
 	SupportSizeChart(int64, int64, string) (*SupportSizeChartResponse, error)
 	UpdateSizeChart(int64, int64, string, string)(*UpdateSizeChartResponse, error)
+	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
 }
 
 type GetCategoryResponse struct {
@@ -216,5 +217,100 @@ func (s *ProductServiceOp)UpdateSizeChart(sid, itemID int64, sizeChart,tok strin
 	}
 	resp := new(UpdateSizeChartResponse)
 	err := s.client.WithShop(sid,tok).Post(path, wrappedData, resp)
+	return resp, err
+}
+
+type AddItemRequest struct {
+	ItemBase
+}
+
+type ItemBase struct {
+	ItemName string `json:"item_name"`
+	Description string `json:"description"`
+	OriginalPrice float64 `json:"original_price"`
+	Weight float64 `json:"weight"`
+	ItemStatus string `json:"item_status"`
+	Dimension Dimension `json:"dimension"`
+	NormalStock int `json:"normal_stock"`
+	LogisticInfo []LogisticInfo `json:"logistic_info"`
+	AttributeList []ItemAttribute `json:"attribute_list"`
+	CategoryID int64 `json:"category_id"`
+	Image ItemImage `json:"image"`
+	PreOrder ItemPreOrder `json:"pre_order"`
+	ItemSKU string `json:"item_sku"`
+	Condition string `json:"condition"`
+	Wholesale []ItemWholesale `json:"wholesale"`
+	VideoUploadID []string `json:"video_upload_id"`
+	Brand ItemBrand `json:"brand"`
+	ItemDangerous int `json:"item_dangerous"`
+}
+
+type Dimension struct {
+	PackageHeight int `json:"package_height"`
+	PackageLength int `json:"package_length"`
+	PackageWidth int `json:"package_width"`
+}
+
+type LogisticInfo struct {
+	SizeID int64 `json:"size_id"`
+	ShippingFee float64 `json:"shipping_fee"`
+	Enabled bool `json:"enabled"`
+	LogisticID int64 `json:"logistic_id"`
+	IsFree bool `json:"is_free"`
+}
+
+type ItemAttribute struct {
+	AttributeID int64 `json:"attribute_id"`
+	AttributeValueList []ItemAttributeValue `json:"attribute_value_list"`
+}
+
+type ItemAttributeValue struct {
+	ValueId int64 `json:"value_id"`
+	OriginalValueName string `json:"original_value_name"`
+	ValueUnit string `json:"value_unit"`
+}
+
+type ItemImage struct {
+	ImageIDList []string `json:"image_id_list"`
+}
+
+type ItemPreOrder struct {
+	IsPreOrder bool `json:"is_pre_order"`
+	DaysToShip int `json:"days_to_ship"`
+}
+
+type ItemWholesale struct {
+	MinCount int `json:"min_count"`
+	MaxCount int `json:"max_count"`
+	UnitPrice float64 `json:"unit_price"`
+}
+
+type ItemBrand struct {
+	BrandID int64 `json:"brand_id"`
+	OriginalBrandName string `json:"original_brand_name"`
+}
+
+type Item struct {
+	ItemBase
+
+	ItemID int64 `json:"item_id"`
+}
+
+// https://open.shopee.com/documents?module=89&type=1&id=616&version=2
+type AddItemResponse struct {
+	BaseResponse
+
+	Response Item `json:"response"`
+	ItemDangerous int `json:"item_dangerous"` // TODO: why here again?
+}
+
+func (s *ProductServiceOp)AddItem(sid int64,item AddItemRequest, tok string)(*AddItemResponse, error) {
+	path := "/product/add_item"
+	resp := new(AddItemResponse)
+	req,err:=StructToMap(item)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
 	return resp, err
 }

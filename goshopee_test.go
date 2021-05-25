@@ -1,6 +1,7 @@
 package goshopee
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 
@@ -50,4 +51,14 @@ func loadFixture(filename string) []byte {
 		panic(fmt.Sprintf("Cannot load fixture %v", filename))
 	}
 	return f
+}
+
+func loadMockData(filename string, out interface{}) {
+	f, err := ioutil.ReadFile("fixtures/" + filename)
+	if err != nil {
+		panic(fmt.Sprintf("Cannot load fixture %v", filename))
+	}
+	if err:=json.Unmarshal(f,&out);err!=nil {
+		panic(fmt.Sprintf("decode mock data error: %s", err))
+	}
 }

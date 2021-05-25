@@ -1,0 +1,69 @@
+{
+  "description": "fewajidfosa jioajfiodsa fewajfioewa jicoxjsi fjdiao fjeiwao fdsjiao fejwiao jfdsioafjeiowa jfidsax",
+  "item_name": "Hello WXwhGUCI574UsyBHu5J2indlBT6s08av",
+  "category_id": 14695,
+  "logistic_info": [
+    {
+      "sizeid": 0,
+      "shipping_fee": 23.12,
+      "enabled": true,
+      "is_free": false,
+      "logistic_id": 80101
+    },
+    {
+      "shipping_fee": 20000,
+      "enabled": true,
+      "is_free": false,
+      "logistic_id": 80106
+    },
+    {
+      "is_free": false,
+      "enabled": false,
+      "logistic_id": 86668
+    },
+    {
+      "enabled": true,
+      "price": 12000,
+      "is_free": true,
+      "logistic_id": 88001
+    },
+    {
+      "enabled": false,
+      "price": 2,
+      "is_free": false,
+      "logistic_id": 88014
+    }
+  ],
+  "weight": 1.1,
+  "item_status": "UNLIST",
+  "image": {
+    "image_id_list": [
+      "a17bb867ecfe900e92e460c57b892590",
+      "30aa47695d1afb99e296956699f67be6",
+      "2ffd521a59da66f9489fa41b5824bb62"
+    ]
+  },
+  "dimension": {
+    "package_height": 11,
+    "package_length": 11,
+    "package_width": 11
+  },
+  "attribute_list": [
+    {
+      "attribute_id": 4811,
+      "attribute_value_list": [
+        {
+          "value_id": 0,
+          "original_value_name": "",
+          "value_unit": ""
+        }
+      ]
+    }
+  ],
+  "original_price": 123.3,
+  "normal_stock": 33,
+  "brand": {
+    "brand_id": 123,
+    "original_brand_name": "nike"
+  }
+}

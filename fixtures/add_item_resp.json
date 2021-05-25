@@ -1,0 +1,98 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "98eae35efff24dd0974c21a847127184",
+  "response": {
+    "item_id": 3000142341,
+    "category_id": 14695,
+    "item_name": "Hello VVjgjrMr6DiSuQSR7Kw3AvJD77i70SJG",
+    "description": "fewajidfosa jioajfiodsa fewajfioewa jicoxjsi fjdiao fjeiwao fdsjiao fejwiao jfdsioafjeiowa jfidsax",
+    "attributes": [
+      {
+        "attribute_id": 4811,
+        "attribute_value_list": [
+          {
+            "value_id": 38,
+            "original_value_name": "kky",
+            "value_unit": ""
+          }
+        ]
+      }
+    ],
+    "price_info": {
+      "original_price": 148,
+      "current_price": 148
+    },
+    "stock_info": {
+      "stock_type": 2,
+      "normal_stock": 33,
+      "current_stock": 33
+    },
+    "images": {
+      "image_url_list": [
+        "https://s-cf-tw.shopeesz.com/file/a17bb867ecfe900e92e460c57b892590",
+        "https://s-cf-tw.shopeesz.com/file/30aa47695d1afb99e296956699f67be6",
+        "https://s-cf-tw.shopeesz.com/file/2ffd521a59da66f9489fa41b5824bb62"
+      ],
+      "image_id_list": [
+        "a17bb867ecfe900e92e460c57b892590",
+        "30aa47695d1afb99e296956699f67be6",
+        "2ffd521a59da66f9489fa41b5824bb62"
+      ]
+    },
+    "weight": 1,
+    "dimension": {
+      "package_length": 11,
+      "package_width": 11,
+      "package_height": 11
+    },
+    "logistic_info": [
+      {
+        "logistic_id": 88014,
+        "enabled": false,
+        "shipping_fee": 0,
+        "size_id": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 80101,
+        "enabled": true,
+        "shipping_fee": 0,
+        "size_id": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 80106,
+        "enabled": true,
+        "shipping_fee": 0,
+        "size_id": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 86668,
+        "enabled": false,
+        "shipping_fee": 0,
+        "size_id": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 88001,
+        "enabled": true,
+        "shipping_fee": 0,
+        "size_id": 0,
+        "is_free": true
+      }
+    ],
+    "pre_order": {
+      "is_pre_order": false,
+      "days_to_ship": 1
+    },
+    "condition": "NEW",
+    "item_status": "NORMAL",
+    "brand": {
+      "brand_id": 123,
+      "original_brand_name": "nike"
+    }
+  }
+}
