@@ -6,6 +6,7 @@ type ProductService interface {
 	GetDTSLimit(int64, int64, string) (*GetDTSLimitResponse, error)
 	GetAttributes(int64, int64, string, string) (*GetAttributesResponse, error)
 	SupportSizeChart(int64, int64, string) (*SupportSizeChartResponse, error)
+	UpdateSizeChart(int64, int64, string, string)(*UpdateSizeChartResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -200,5 +201,20 @@ func (s *ProductServiceOp)SupportSizeChart(sid, cid int64, tok string) (*Support
 
 	resp := new(SupportSizeChartResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
+	return resp, err
+}
+
+type UpdateSizeChartResponse struct {
+	BaseResponse
+}
+
+func (s *ProductServiceOp)UpdateSizeChart(sid, itemID int64, sizeChart,tok string)(*UpdateSizeChartResponse, error) {
+	path := "/product/update_size_chart"
+	wrappedData := map[string]interface{}{
+		"item_id": itemID,
+		"size_chart":  sizeChart,
+	}
+	resp := new(UpdateSizeChartResponse)
+	err := s.client.WithShop(sid,tok).Post(path, wrappedData, resp)
 	return resp, err
 }

@@ -111,3 +111,23 @@ func Test_SupportSizeChart(t *testing.T) {
 		t.Errorf("SupportSizeChart returned %+v, expected %+v",res.Response.SupportSizeChart , expected)
 	}
 }
+
+func Test_UpdateSizeChart(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/update_size_chart",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("response.json")))
+
+	res,err:=client.Product.UpdateSizeChart(shopID,123,"test1234",accessToken)
+	if err!=nil {
+		t.Errorf("Product.UpdateSizeChart error: %s",err)
+	}
+
+	t.Logf("Product.UpdateSizeChart: %#v",res)
+
+	var expected string = "f634ea27eff8461b8f6f9ffa1d7ddab2"
+	if res.RequestID != expected {
+		t.Errorf("RequestID returned %+v, expected %+v",res.RequestID , expected)
+	}
+}
