@@ -1,0 +1,19 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "6faac36a4a3242aabad2941e3acd7297",
+  "response": {
+    "brand_list": [
+      {
+        "brand_id": 2500139861,
+        "original_brand_name": "nike",
+        "display_brand_name": "nike"
+      }
+    ],
+    "has_next_page": true,
+    "next_offset": 10,
+    "is_mandatory": false,
+    "input_type": "TEXT_FILED"
+  }
+}
