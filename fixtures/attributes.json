@@ -1,0 +1,41 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "aaaaaaa",
+  "response": {
+    "attribute_list": [
+      {
+        "attribute_id": 123,
+        "original_attribute_name": "aaa",
+        "display_attribute_name": "bbb",
+        "is_mandatory": false,
+        "input_validation_type": "",
+        "format_type": "",
+        "date_format_type": "",
+        "input_type": "",
+        "attribute_unit": [
+          ""
+        ],
+        "attribute_value_list": [
+          {
+            "value_id": 1234,
+            "original_value_name": "xxx",
+            "display_value_name": "xxxx",
+            "parent_attribute_list": [
+              {
+                "parent_attribute_id": 1234,
+                "parent_value_id": 23456
+              }
+            ],
+            "parent_brand_list": [
+              {
+                "parent_brand_id": 2134
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

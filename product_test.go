@@ -66,3 +66,28 @@ func Test_GetDTSLimit(t *testing.T) {
 		t.Errorf("DaysToShipLimit.MaxLimit returned %+v, expected %+v",res.Response.DaysToShipLimit.MaxLimit , expected)
 	}
 }
+
+func Test_GetAttributes(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/get_attributes",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("attributes.json")))
+
+	res,err:=client.Product.GetAttributes(shopID,123,"en",accessToken)
+	if err!=nil {
+		t.Errorf("Product.GetAttributes error: %s",err)
+	}
+
+	t.Logf("Product.GetAttributes: %#v",res)
+
+	var expectedID int64 = 123
+	if res.Response.AttributeList[0].AttributeID != expectedID {
+		t.Errorf("AttributeList[0].AttributeID returned %+v, expected %+v",res.Response.AttributeList[0].AttributeID , expectedID)
+	}
+
+	var expectedBrandID int64 = 2134
+	if res.Response.AttributeList[0].AttributeValueList[0].ParentBrandList[0].ParentBrandID != expectedBrandID {
+		t.Errorf("AttributeList[0].AttributeValueList[0].ParentBrandList[0].ParentBrandID returned %+v, expected %+v",res.Response.AttributeList[0].AttributeValueList[0].ParentBrandList[0].ParentBrandID , expectedBrandID)
+	}
+}
