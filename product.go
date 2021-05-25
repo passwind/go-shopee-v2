@@ -33,7 +33,7 @@ type GetCategoryRequest struct {
 	Language string `url:"language"`
 }
 
-func (s *ProductServiceOp)	GetCategory(sid int64, tok, lang string) (*GetCategoryResponse,error){
+func (s *ProductServiceOp)	GetCategory(sid int64, lang, tok string) (*GetCategoryResponse,error){
 	path := "/product/get_category"
 
 	opt:=GetCategoryRequest{lang}

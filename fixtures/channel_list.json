@@ -1,0 +1,124 @@
+{
+  "error": "",
+  "message": "",
+  "response": {
+    "logistics": [
+      {
+        "logistics_channel_id": 123456,
+        "logistics_channel_name": "Test channel name",
+        "cod_enabled": false,
+        "enabled": false,
+        "fee_type": "SIZE_INPUT",
+        "size_list": [],
+        "weight_limit": {
+          "item_max_weight": 0,
+          "item_min_weight": 0
+        },
+        "item_max_dimension": {
+          "height": 0,
+          "width": 0,
+          "length": 51,
+          "unit": "cm"
+        },
+        "volume_limit": {
+          "item_max_volume": 10,
+          "item_min_volume": 1
+        },
+        "preferred": false
+      },
+      {
+        "logistics_channel_id": 51055,
+        "logistics_channel_name": "buyer_test whs",
+        "cod_enabled": false,
+        "enabled": false,
+        "fee_type": "SIZE_INPUT",
+        "size_list": [],
+        "weight_limit": {
+          "item_max_weight": 0,
+          "item_min_weight": 0
+        },
+        "item_max_dimension": {
+          "height": 0,
+          "width": 0,
+          "length": 0,
+          "unit": ""
+        },
+        "volume_limit": {
+          "item_max_volume": 10,
+          "item_min_volume": 1
+        },
+        "preferred": false
+      },
+      {
+        "logistics_channel_id": 50015,
+        "logistics_channel_name": "VNPost Nhanh_product",
+        "cod_enabled": true,
+        "enabled": true,
+        "fee_type": "SIZE_INPUT",
+        "size_list": [],
+        "weight_limit": {
+          "item_max_weight": 0,
+          "item_min_weight": 0.01
+        },
+        "item_max_dimension": {
+          "height": 0,
+          "width": 0,
+          "length": 0,
+          "unit": ""
+        },
+        "volume_limit": {
+          "item_max_volume": 10,
+          "item_min_volume": 1
+        },
+        "preferred": false
+      },
+      {
+        "logistics_channel_id": 51018,
+        "logistics_channel_name": "buyer_123gg",
+        "cod_enabled": false,
+        "enabled": false,
+        "fee_type": "SIZE_INPUT",
+        "size_list": [],
+        "weight_limit": {
+          "item_max_weight": 0,
+          "item_min_weight": 0
+        },
+        "item_max_dimension": {
+          "height": 0,
+          "width": 0,
+          "length": 0,
+          "unit": ""
+        },
+        "volume_limit": {
+          "item_max_volume": 10,
+          "item_min_volume": 1
+        },
+        "preferred": false
+      },
+      {
+        "logistics_channel_id": 5116,
+        "logistics_channel_name": "buyer_masking local Product Buyer  50066, 50010, 50011, 50012",
+        "cod_enabled": false,
+        "enabled": true,
+        "fee_type": "SIZE_INPUT",
+        "size_list": [],
+        "weight_limit": {
+          "item_max_weight": 10000000,
+          "item_min_weight": 10000000
+        },
+        "item_max_dimension": {
+          "height": 10000000,
+          "width": 10000000,
+          "length": 10000000,
+          "unit": "cm"
+        },
+        "volume_limit": {
+          "item_max_volume": 10,
+          "item_min_volume": 1
+        },
+        "preferred": false
+      }
+    ]
+  },
+  "request_id": "ba60fff8d69347a9974153139e50a782"
+}

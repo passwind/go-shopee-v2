@@ -14,7 +14,7 @@ func Test_GetCategory(t *testing.T) {
 	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/get_category",app.APIURL),
 		httpmock.NewBytesResponder(200, loadFixture("category_list.json")))
 
-	res,err:=client.Product.GetCategory(shopID,accessToken,"zh-hant")
+	res,err:=client.Product.GetCategory(shopID,"zh-hant",accessToken)
 	if err!=nil {
 		t.Errorf("Product.GetCategory error: %s",err)
 	}
