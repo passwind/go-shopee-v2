@@ -1,0 +1,13 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "3093e98b59644ab9a2c3d1a6a0846303",
+  "response": {
+    "days_to_ship_limit": {
+      "min_limit": 5,
+      "max_limit": 7
+    },
+    "non_pre_order_days_to_ship": 5
+  }
+}

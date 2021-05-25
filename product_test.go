@@ -46,3 +46,23 @@ func Test_GetBrandList(t *testing.T) {
 		t.Errorf("BrandID returned %+v, expected %+v",res.Response.BrandList[0].BrandID , expectedID)
 	}
 }
+
+func Test_GetDTSLimit(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/get_dts_limit",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("dts_limit.json")))
+
+	res,err:=client.Product.GetDTSLimit(shopID,123,accessToken)
+	if err!=nil {
+		t.Errorf("Product.GetDTSLimit error: %s",err)
+	}
+
+	t.Logf("Product.GetDTSLimit: %#v",res)
+
+	var expected int = 7
+	if res.Response.DaysToShipLimit.MaxLimit != expected {
+		t.Errorf("DaysToShipLimit.MaxLimit returned %+v, expected %+v",res.Response.DaysToShipLimit.MaxLimit , expected)
+	}
+}
