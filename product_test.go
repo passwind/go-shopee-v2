@@ -91,3 +91,23 @@ func Test_GetAttributes(t *testing.T) {
 		t.Errorf("AttributeList[0].AttributeValueList[0].ParentBrandList[0].ParentBrandID returned %+v, expected %+v",res.Response.AttributeList[0].AttributeValueList[0].ParentBrandList[0].ParentBrandID , expectedBrandID)
 	}
 }
+
+func Test_SupportSizeChart(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/support_size_chart",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("support_size_chart.json")))
+
+	res,err:=client.Product.SupportSizeChart(shopID,123,accessToken)
+	if err!=nil {
+		t.Errorf("Product.SupportSizeChart error: %s",err)
+	}
+
+	t.Logf("Product.SupportSizeChart: %#v",res)
+
+	var expected bool = false
+	if res.Response.SupportSizeChart != expected {
+		t.Errorf("SupportSizeChart returned %+v, expected %+v",res.Response.SupportSizeChart , expected)
+	}
+}

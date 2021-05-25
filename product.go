@@ -5,6 +5,7 @@ type ProductService interface {
 	GetBrandList(int64, int64, int, int, int, string) (*GetBrandListResponse, error)
 	GetDTSLimit(int64, int64, string) (*GetDTSLimitResponse, error)
 	GetAttributes(int64, int64, string, string) (*GetAttributesResponse, error)
+	SupportSizeChart(int64, int64, string) (*SupportSizeChartResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -172,6 +173,32 @@ func (s *ProductServiceOp)	GetAttributes(sid, cid int64, lang, tok string) (*Get
 	}
 
 	resp := new(GetAttributesResponse)
+	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
+	return resp, err
+}
+
+type SupportSizeChartRequest struct {
+	CategoryID int64 `url:"category_id"`
+}
+
+type SupportSizeChartResponse struct {
+	BaseResponse
+
+	Response SupportSizeChartResponseData `json:"response"`
+}
+
+type SupportSizeChartResponseData struct {
+	SupportSizeChart bool `json:"support_size_chart"`
+}
+
+func (s *ProductServiceOp)SupportSizeChart(sid, cid int64, tok string) (*SupportSizeChartResponse, error){
+	path := "/product/support_size_chart"
+
+	opt:=SupportSizeChartRequest{
+		CategoryID: cid,
+	}
+
+	resp := new(SupportSizeChartResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
 	return resp, err
 }
