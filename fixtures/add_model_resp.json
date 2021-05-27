@@ -1,0 +1,28 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "aaaaaaa",
+  "response": {
+    "model": [
+      {
+        "tier_index": [
+          0
+        ],
+        "model_id": 12345,
+        "stock_info": [
+          {
+            "stock_type": 2,
+            "normal_stock": 100
+          }
+        ],
+        "price_info": [
+          {
+            "original_price": 11.11
+          }
+        ],
+        "model_sku": "abcd"
+      }
+    ]
+  }
+}

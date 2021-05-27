@@ -9,6 +9,7 @@ type ProductService interface {
 	UpdateSizeChart(int64, int64, string, string)(*UpdateSizeChartResponse, error)
 	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
 	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
+	AddModel(int64, AddModelRequest, string)(*AddModelResponse,error)
 }
 
 type GetCategoryResponse struct {
@@ -319,7 +320,7 @@ func (s *ProductServiceOp)AddItem(sid int64,item AddItemRequest, tok string)(*Ad
 type InitTierVariationRequest struct {
 	ItemID int64 `json:"item_id"`
 	TierVariation []TierVariation `json:"tier_variation"`
-	Model []Model `json:"model"`
+	Model []InitTierVariationRequestModel `json:"model"`
 }
 
 type TierVariation struct {
@@ -336,7 +337,7 @@ type TierVariationOptionImage struct {
 	ImageID string `json:"image_id"`
 }
 
-type Model struct {
+type InitTierVariationRequestModel struct {
 	TierIndex []int `json:"tier_index"`
 	NormalStock int `json:"normal_stock"`
 	OriginalPrice float64 `json:"original_price"`
@@ -352,7 +353,7 @@ type InitTierVariationResponse struct {
 type InitTierVariationResponseData struct {
 	ItemID int64 `json:"item_id"`
 	TierVariation []InitTierVariationResponseDataTierVariation `json:"tier_variation"`
-	Model []InitTierVariationResponseDataModel `json:"model"`
+	Model []Model `json:"model"`
 }
 
 type InitTierVariationResponseDataTierVariation struct {
@@ -369,7 +370,7 @@ type InitTierVariationResponseDataTierVariationTierVariationOptionImage struct {
 	ImageURL string `json:"image_url"`
 }
 
-type InitTierVariationResponseDataModel struct {
+type Model struct {
 	TierIndex []int `json:"tier_index"`
 	ModelID int64 `json:"model_id"`
 	ModelSKU string `json:"model_sku"`
@@ -389,6 +390,40 @@ type PriceInfo struct {
 func (s *ProductServiceOp)InitTierVariation(sid int64,vars InitTierVariationRequest, tok string)(*InitTierVariationResponse, error) {
 	path := "/product/init_tier_variation"
 	resp := new(InitTierVariationResponse)
+	req,err:=StructToMap(vars)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+// https://open.shopee.com/documents?module=89&type=1&id=649&version=2
+type AddModelRequest struct {
+	ItemID int64 `json:"item_id"`
+	ModelList []AddModelRequestModel `json:"model_list"`
+}
+
+type AddModelRequestModel struct {
+	TierIndex []int `json:"tier_index"` // TODO: doc error?
+	NormalStock int `json:"normal_stock"`
+	OriginalPrice float64 `json:"original_price"`
+	ModelSku string `json:"model_sku"`
+}
+
+type AddModelResponse struct {
+	BaseResponse
+
+	Response AddModelResponseData `json:"response"`
+}
+
+type AddModelResponseData struct {
+	Model []Model `json:"model"`
+}
+
+func (s *ProductServiceOp)AddModel(sid int64,vars AddModelRequest, tok string)(*AddModelResponse, error) {
+	path := "/product/add_model"
+	resp := new(AddModelResponse)
 	req,err:=StructToMap(vars)
 	if err!=nil {
 		return nil,err

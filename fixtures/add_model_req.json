@@ -1,0 +1,13 @@
+{
+  "item_id": 1000,
+  "model_list": [
+    {
+      "tier_index": [
+        0
+      ],
+      "normal_stock": 100,
+      "original_price": 11.11,
+      "model_sku": "abcd"
+    }
+  ]
+}

@@ -177,3 +177,26 @@ func Test_InitTierVariation(t *testing.T) {
 		t.Errorf("ModelID returned %+v, expected %+v", res.Response.Model[0].ModelID , expectedID)
 	}
 }
+
+func Test_AddModel(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/add_model",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("add_model_resp.json")))
+
+	var req AddModelRequest
+	loadMockData("add_model_req.json",&req)
+
+	res,err:=client.Product.AddModel(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Product.AddModel error: %s",err)
+	}
+
+	t.Logf("Product.AddModel: %#v",res)
+
+	var expected float64 = 11.11
+	if res.Response.Model[0].PriceInfo[0].OriginalPrice != expected {
+		t.Errorf("OriginalPrice returned %+v, expected %+v", res.Response.Model[0].PriceInfo[0].OriginalPrice , expected)
+	}
+}
