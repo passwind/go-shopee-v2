@@ -9,7 +9,8 @@ type ProductService interface {
 	UpdateSizeChart(int64, int64, string, string)(*UpdateSizeChartResponse, error)
 	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
 	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
-	AddModel(int64, AddModelRequest, string)(*AddModelResponse,error)
+	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
+	GetModelList(int64, int64, string) (*GetModelListResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -41,7 +42,9 @@ type GetCategoryRequest struct {
 func (s *ProductServiceOp)	GetCategory(sid int64, lang, tok string) (*GetCategoryResponse,error){
 	path := "/product/get_category"
 
-	opt:=GetCategoryRequest{lang}
+	opt:=GetCategoryRequest{
+		Language:lang,
+	}
 
 	resp := new(GetCategoryResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
@@ -335,6 +338,7 @@ type TierVariationOption struct {
 
 type TierVariationOptionImage struct {
 	ImageID string `json:"image_id"`
+	ImageURL string `json:"image_url"`
 }
 
 type InitTierVariationRequestModel struct {
@@ -376,15 +380,23 @@ type Model struct {
 	ModelSKU string `json:"model_sku"`
 	StockInfo []StockInfo `json:"stock_info"`
 	PriceInfo []PriceInfo `json:"price_info"`
+	PromotionID int64 `json:"promotion_id"`
 }
 
 type StockInfo struct {
 	StockType int `json:"stock_type"`
 	NormalStock int `json:"normal_stock"`
+	CurrentStock int `json:"current_stock"`
+	ReservedStock int `json:"reserved_stock"`
 }
 
 type PriceInfo struct {
 	OriginalPrice float64 `json:"original_price"`
+	CurrentPrice float64 `json:"current_price"`
+	InflatedPriceOfOriginalPrice float64 `json:"inflated_price_of_original_price"`
+	InflatedPriceOfCurrentPrice float64 `json:"inflated_price_of_current_price"`
+	SipItemPrice float64 `json:"sip_item_price"`
+	SipItemPriceSource string `json:"sip_item_price_source"`
 }
 
 func (s *ProductServiceOp)InitTierVariation(sid int64,vars InitTierVariationRequest, tok string)(*InitTierVariationResponse, error) {
@@ -429,5 +441,32 @@ func (s *ProductServiceOp)AddModel(sid int64,vars AddModelRequest, tok string)(*
 		return nil,err
 	}
 	err = s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+type GetModelListRequest struct {
+	ItemID int64 `url:"item_id"`
+}
+
+type GetModelListResponse struct {
+	BaseResponse
+
+	Response GetModelListResponseData `json:"response"`
+}
+
+type GetModelListResponseData struct {
+	TierVariation []TierVariation `json:"tier_variation"`
+	Model []Model `json:"model"`
+}
+
+func (s *ProductServiceOp)	GetModelList(sid, itemID int64, tok string) (*GetModelListResponse,error){
+	path := "/product/get_model_list"
+
+	opt:=GetModelListRequest{
+		ItemID: itemID,
+	}
+
+	resp := new(GetModelListResponse)
+	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
 	return resp, err
 }

@@ -1,0 +1,81 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "75c2b01e50764cec8cfdc61e75c1f26d",
+  "response": {
+    "tier_variation": [
+      {
+        "name": "",
+        "option_list": [
+          {
+            "option": "testsku1"
+          },
+          {
+            "option": "testsku2"
+          }
+        ]
+      }
+    ],
+    "model": [
+      {
+        "model_id": 2000458802,
+        "promotion_id": 0,
+        "tier_index": [
+          0
+        ],
+        "stock_info": [
+          {
+            "stock_type": 2,
+            "current_stock": 0,
+            "normal_stock": 0,
+            "reserved_stock": 0
+          },
+          {
+            "stock_type": 1,
+            "current_stock": 0,
+            "normal_stock": 0,
+            "reserved_stock": 0
+          }
+        ],
+        "price_info": [
+          {
+            "current_price": 100,
+            "original_price": 100,
+            "inflated_price_of_current_price": 100,
+            "inflated_price_of_original_price": 100
+          }
+        ]
+      },
+      {
+        "model_id": 2000458803,
+        "promotion_id": 0,
+        "tier_index": [
+          1
+        ],
+        "stock_info": [
+          {
+            "stock_type": 2,
+            "current_stock": 0,
+            "normal_stock": 0,
+            "reserved_stock": 0
+          },
+          {
+            "stock_type": 1,
+            "current_stock": 0,
+            "normal_stock": 0,
+            "reserved_stock": 0
+          }
+        ],
+        "price_info": [
+          {
+            "current_price": 100,
+            "original_price": 100,
+            "inflated_price_of_current_price": 100,
+            "inflated_price_of_original_price": 100
+          }
+        ]
+      }
+    ]
+  }
+}

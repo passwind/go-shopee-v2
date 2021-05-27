@@ -200,3 +200,23 @@ func Test_AddModel(t *testing.T) {
 		t.Errorf("OriginalPrice returned %+v, expected %+v", res.Response.Model[0].PriceInfo[0].OriginalPrice , expected)
 	}
 }
+
+func Test_GetModelListt(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/get_model_list",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("get_model_list_resp.json")))
+
+	res,err:=client.Product.GetModelList(shopID,123,accessToken)
+	if err!=nil {
+		t.Errorf("Product.GetModelList error: %s",err)
+	}
+
+	t.Logf("Product.GetModelList: %#v",res)
+
+	var expected int64 = 2000458802
+	if res.Response.Model[0].ModelID != expected {
+		t.Errorf("ModelID returned %+v, expected %+v",res.Response.Model[0].ModelID , expected)
+	}
+}
