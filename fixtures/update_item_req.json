@@ -1,0 +1,64 @@
+{
+  "description": "Hello product product WlQPdMV4SlVoG7QD1v0fEecNoCVEBNx6",
+  "attribute": [
+    {
+      "attribute_id": 5357,
+      "attribute_value_list": [
+        {
+          "value_id": 0,
+          "original_value_name": "red",
+          "value_unit": "kg"
+        }
+      ]
+    }
+  ],
+  "item_sku": "abc",
+  "condition": "USED",
+  "pre_order": {
+    "is_pre_order": false,
+    "days_to_ship": 7
+  },
+  "item_name": "Hello Pgkk50jdNgEnlWvX",
+  "category_id": 34106,
+  "item_id": 2800143058,
+  "logistic_info": [
+    {
+      "enabled": false,
+      "shipping_fee": 9,
+      "size_id": 1,
+      "logistic_id": 10007,
+      "is_free": false
+    },
+    {
+      "enabled": false,
+      "shipping_fee": 11.3,
+      "size_id": 0,
+      "logistic_id": 19101,
+      "is_free": false
+    }
+  ],
+  "weight": 0.9,
+  "wholesale": [
+    {
+      "max_count": 10,
+      "unit_price": 9.9,
+      "min_count": 0
+    }
+  ],
+  "item_status": "UNLIST",
+  "image": {
+    "image_id_list": [
+      "3858fa7a4166271693f90e30d7a1fce5",
+      "82becb4830bd2ee90ad6acf8a9dc26d7"
+    ]
+  },
+  "dimension": {
+    "package_length": 12,
+    "package_height": 13,
+    "package_width": 14
+  },
+  "brand": {
+    "brand_id": 123,
+    "original_brand_name": "nike"
+  }
+}

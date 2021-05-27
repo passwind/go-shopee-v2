@@ -1,0 +1,110 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "326527603d034fd1b2dd6a74d70ade54",
+  "response": {
+    "item_id": 2800143058,
+    "category_id": 34106,
+    "item_name": "Hello QdlHimD4nto0OGIQ",
+    "description": "Hello product product 6xnhI3ug5D2rFpH3QoJSNNOrfUSP8rw5",
+    "images": {
+      "image_url_list": [
+        "https://s-cf-tw.shopeesz.com/file/3858fa7a4166271693f90e30d7a1fce5",
+        "https://s-cf-tw.shopeesz.com/file/82becb4830bd2ee90ad6acf8a9dc26d7"
+      ],
+      "image_id_list": [
+        "3858fa7a4166271693f90e30d7a1fce5",
+        "82becb4830bd2ee90ad6acf8a9dc26d7"
+      ]
+    },
+    "weight": 0.9,
+    "dimension": {
+      "package_length": 12,
+      "package_width": 14,
+      "package_height": 13
+    },
+    "logistic_info": [
+      {
+        "logistic_id": 10007,
+        "logistic_name": "Ninja Van",
+        "enabled": true,
+        "is_free": false,
+        "estimated_shipping_fee": 1.49
+      },
+      {
+        "logistic_id": 19101,
+        "logistic_name": "Singpost - Registered Mail",
+        "enabled": true,
+        "shipping_fee": 11.3,
+        "is_free": false
+      },
+      {
+        "logistic_id": 233,
+        "logistic_name": "233",
+        "enabled": false,
+        "shipping_fee": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 10101,
+        "logistic_name": "SG_TEST_CHANNEL_JNT",
+        "enabled": false,
+        "shipping_fee": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 19100,
+        "logistic_name": "Singpost - Normal Mail",
+        "enabled": false,
+        "shipping_fee": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 19102,
+        "logistic_name": "Singpost - Smartpac",
+        "enabled": false,
+        "shipping_fee": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 19900,
+        "logistic_name": "Other Logistics Provider",
+        "enabled": false,
+        "shipping_fee": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 19107,
+        "logistic_name": "Simply Post",
+        "enabled": false,
+        "shipping_fee": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 19009,
+        "logistic_name": "Other Logistics Provider",
+        "enabled": false,
+        "shipping_fee": 0,
+        "is_free": false
+      },
+      {
+        "logistic_id": 19103,
+        "logistic_name": "Singpost - Popstation",
+        "enabled": false,
+        "shipping_fee": 0,
+        "is_free": false
+      }
+    ],
+    "pre_order": {
+      "is_pre_order": false,
+      "days_to_ship": 2
+    },
+    "condition": "USED",
+    "item_status": "UNLIST",
+    "brand": {
+      "brand_id": 123,
+      "original_brand_name": "nike"
+    }
+  }
+}

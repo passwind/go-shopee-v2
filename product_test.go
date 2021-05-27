@@ -261,3 +261,26 @@ func Test_DeleteItem(t *testing.T) {
 		t.Errorf("res.RequestID returned %+v, expected %+v", res.RequestID  , expected)
 	}
 }
+
+func Test_UpdateItem(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/update_item",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("update_item_resp.json")))
+
+	var req UpdateItemRequest
+	loadMockData("update_item_req.json",&req)
+
+	res,err:=client.Product.UpdateItem(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Product.UpdateItem error: %s",err)
+	}
+
+	t.Logf("Product.UpdateItem: %#v",res)
+
+	var expected string = "Singpost - Registered Mail"
+	if res.Response.LogisticInfo[1].LogisticName != expected {
+		t.Errorf("LogisticName returned %+v, expected %+v", res.Response.LogisticInfo[1].LogisticName , expected)
+	}
+}

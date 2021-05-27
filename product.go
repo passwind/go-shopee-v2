@@ -10,6 +10,7 @@ type ProductService interface {
 	GetItemBaseInfo(int64, []int64, string) (*GetItemBaseInfoResponse, error)
 	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
 	DeleteItem(int64, int64, string) (*BaseResponse, error)
+	UpdateItem(int64, UpdateItemRequest, string) (*UpdateItemResponse, error)
 	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
 	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
 	GetModelList(int64, int64, string) (*GetModelListResponse, error)
@@ -536,5 +537,39 @@ func (s *ProductServiceOp)DeleteItem(sid, itemID int64, tok string)(*BaseRespons
 		"item_id": itemID,
 	}
 	err := s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+type UpdateItemRequest struct {
+	ItemBase
+
+	ItemID int64 `json:"item_id"`
+	OriginalPrice float64 `json:"original_price"`
+	NormalStock int `json:"normal_stock"`
+	VideoUploadID []string `json:"video_upload_id"`
+}
+
+type UpdateItemResponse struct {
+	BaseResponse
+
+	Response UpdateItemResponseData `json:"response"`
+}
+
+type UpdateItemResponseData struct {
+	ItemBase
+
+	ItemID int64 `json:"item_id"`
+	PriceInfo PriceInfo `json:"price_info"`
+	StockInfo StockInfo `json:"stock_info"`
+}
+
+func (s *ProductServiceOp)UpdateItem(sid int64,item UpdateItemRequest, tok string)(*UpdateItemResponse, error) {
+	path := "/product/update_item"
+	resp := new(UpdateItemResponse)
+	req,err:=StructToMap(item)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
 	return resp, err
 }
