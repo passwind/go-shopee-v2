@@ -1,0 +1,135 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "b2e4e0cdab4748f89301ca41e0587e73",
+  "response": {
+    "item_list": [
+      {
+        "item_id": 3400133011,
+        "category_id": 14646,
+        "item_name": "seller discount ongoing",
+        "description": "first product 001first product 001first product 001first product 001first product 001",
+        "item_sku": "",
+        "create_time": 1600572637,
+        "update_time": 1608129425,
+        "attribute_list": [
+          {
+            "attribute_id": 4811,
+            "original_attribute_name": "Brand: L2 Default [14644]",
+            "is_mandatory": false,
+            "attribute_value_list": [
+              {
+                "value_id": 0,
+                "original_value_name": "",
+                "value_unit": ""
+              }
+            ]
+          }
+        ],
+        "price_info": [
+          {
+            "currency": "SGD",
+            "original_price": 100,
+            "current_price": 50
+          }
+        ],
+        "stock_info": [
+          {
+            "stock_type": 2,
+            "current_stock": 395,
+            "normal_stock": 395,
+            "reserved_stock": 0
+          }
+        ],
+        "image": {
+          "image_url_list": [
+            "https://cf.shopee.sg/file/1e076dff0699d8e778c06dd6c02df1fe",
+            "https://cf.shopee.sg/file/c07ac95ba7bb624d731e37fe2f0349de"
+          ],
+          "image_id_list": [
+            "1e076dff0699d8e778c06dd6c02df1fe",
+            "c07ac95ba7bb624d731e37fe2f0349de"
+          ]
+        },
+        "weight": 1.000,
+        "dimension": {
+          "package_length": 0,
+          "package_width": 0,
+          "package_height": 0
+        },
+        "logistic_info": [
+          {
+            "logistic_id": 233,
+            "logistic_name": "233",
+            "enabled": false,
+            "shipping_fee": 0,
+            "is_free": false
+          },
+          {
+            "logistic_id": 19103,
+            "logistic_name": "Singpost - Popstation",
+            "enabled": false,
+            "shipping_fee": 0,
+            "is_free": false
+          },
+          {
+            "logistic_id": 10007,
+            "logistic_name": "Ninja Van",
+            "enabled": false,
+            "is_free": false,
+            "estimated_shipping_fee": 1.49
+          },
+          {
+            "logistic_id": 19107,
+            "logistic_name": "Simply Post",
+            "enabled": false,
+            "shipping_fee": 0,
+            "is_free": false
+          },
+          {
+            "logistic_id": 13002,
+            "logistic_name": "shuming test",
+            "enabled": false,
+            "shipping_fee": 0,
+            "is_free": false
+          },
+          {
+            "logistic_id": 234,
+            "logistic_name": "dnt",
+            "enabled": true,
+            "shipping_fee": 0,
+            "is_free": true
+          },
+          {
+            "logistic_id": 19900,
+            "logistic_name": "Other Logistics Provider",
+            "enabled": false,
+            "shipping_fee": 0,
+            "is_free": false
+          },
+          {
+            "logistic_id": 10101,
+            "logistic_name": "SG_TEST_CHANNEL_JNT",
+            "enabled": false,
+            "is_free": false,
+            "estimated_shipping_fee": 0
+          }
+        ],
+        "pre_order": {
+          "is_pre_order": false,
+          "days_to_ship": 2
+        },
+        "condition": "NEW",
+        "size_chart": "",
+        "item_status": "NORMAL",
+        "has_model": false,
+        "promotion_id": 1000030380,
+        "brand": {
+          "brand_id": 123,
+          "original_brand_name": "nike"
+        }
+      }
+    ]
+  }
+}

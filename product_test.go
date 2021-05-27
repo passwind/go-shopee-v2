@@ -220,3 +220,24 @@ func Test_GetModelListt(t *testing.T) {
 		t.Errorf("ModelID returned %+v, expected %+v",res.Response.Model[0].ModelID , expected)
 	}
 }
+
+func Test_GetItemBaseInfo(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/get_item_base_info",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("get_item_base_info_resp.json")))
+
+	res,err:=client.Product.GetItemBaseInfo(shopID,[]int64{123,356},accessToken)
+	if err!=nil {
+		t.Errorf("Product.GetItemBaseInfo error: %s",err)
+	}
+
+	t.Logf("Product.GetItemBaseInfo: %#v",res)
+
+	var expected string = "1e076dff0699d8e778c06dd6c02df1fe"
+
+	if res.Response.ItemList[0].Image.ImageIDList[0] != expected {
+		t.Errorf("Image ID returned %+v, expected %+v",res.Response.ItemList[0].Image.ImageIDList[0] , expected)
+	}
+}

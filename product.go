@@ -7,6 +7,7 @@ type ProductService interface {
 	GetAttributes(int64, int64, string, string) (*GetAttributesResponse, error)
 	SupportSizeChart(int64, int64, string) (*SupportSizeChartResponse, error)
 	UpdateSizeChart(int64, int64, string, string)(*UpdateSizeChartResponse, error)
+	GetItemBaseInfo(int64, []int64, string) (*GetItemBaseInfoResponse, error)
 	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
 	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
 	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
@@ -227,27 +228,41 @@ func (s *ProductServiceOp)UpdateSizeChart(sid, itemID int64, sizeChart,tok strin
 
 type AddItemRequest struct {
 	ItemBase
+
+	OriginalPrice float64 `json:"original_price"`
+	NormalStock int `json:"normal_stock"`
+	VideoUploadID []string `json:"video_upload_id"`
 }
 
 type ItemBase struct {
+	CategoryID int64 `json:"category_id"`
 	ItemName string `json:"item_name"`
 	Description string `json:"description"`
-	OriginalPrice float64 `json:"original_price"`
-	Weight float64 `json:"weight"`
-	ItemStatus string `json:"item_status"`
-	Dimension Dimension `json:"dimension"`
-	NormalStock int `json:"normal_stock"`
-	LogisticInfo []LogisticInfo `json:"logistic_info"`
-	AttributeList []ItemAttribute `json:"attribute_list"`
-	CategoryID int64 `json:"category_id"`
-	Image ItemImage `json:"image"`
-	PreOrder ItemPreOrder `json:"pre_order"`
 	ItemSKU string `json:"item_sku"`
-	Condition string `json:"condition"`
+	CreateTime int64 `json:"create_time"`
+	UpdateTime int64 `json:"update_time"`
+	AttributeList []ItemAttribute `json:"attribute_list"`
+	Image ItemImage `json:"image"`
+	Weight float64 `json:"weight"` // int or float? sample is "1.000"? or string? https://open.shopee.com/documents?module=89&type=1&id=616&version=2
+	Dimension Dimension `json:"dimension"`
+	LogisticInfo []LogisticInfo `json:"logistic_info"`
+	PreOrder ItemPreOrder `json:"pre_order"`
 	Wholesale []ItemWholesale `json:"wholesale"`
-	VideoUploadID []string `json:"video_upload_id"`
+	Condition string `json:"condition"`
+	SizeChart string `json:"size_chart"`
+	ItemStatus string `json:"item_status"`
+	HasModel bool `json:"has_model"`
+	PromotionID int64 `json:"promotion_id"`
+	VideoInfo []ItemVideo `json:"video_info"`
 	Brand ItemBrand `json:"brand"`
 	ItemDangerous int `json:"item_dangerous"`
+}
+
+// https://open.shopee.com/documents?module=89&type=1&id=612&version=2
+type ItemVideo struct {
+	VideoURL string `json:"video_url"`
+	ThumbnailURL string `json:"thumbnail_url"`
+	Duration int `json:"duration"`
 }
 
 type Dimension struct {
@@ -257,11 +272,13 @@ type Dimension struct {
 }
 
 type LogisticInfo struct {
-	SizeID int64 `json:"size_id"`
-	ShippingFee float64 `json:"shipping_fee"`
-	Enabled bool `json:"enabled"`
 	LogisticID int64 `json:"logistic_id"`
+	LogisticName string `json:"logistic_name"`
+	Enabled bool `json:"enabled"`
+	ShippingFee float64 `json:"shipping_fee"`
+	SizeID int64 `json:"size_id"`
 	IsFree bool `json:"is_free"`
+	EstimatedShippingFee float64 `json:"estimated_shipping_fee"` // TODO: boolean ? https://open.shopee.com/documents?module=89&type=1&id=612&version=2
 }
 
 type ItemAttribute struct {
@@ -277,6 +294,7 @@ type ItemAttributeValue struct {
 
 type ItemImage struct {
 	ImageIDList []string `json:"image_id_list"`
+	ImageURLList []string `json:"image_url_list"`
 }
 
 type ItemPreOrder struct {
@@ -288,6 +306,7 @@ type ItemWholesale struct {
 	MinCount int `json:"min_count"`
 	MaxCount int `json:"max_count"`
 	UnitPrice float64 `json:"unit_price"`
+	InflatedPriceOfUnitPrice float64 `json:"inflated_price_of_unit_price"`
 }
 
 type ItemBrand struct {
@@ -299,14 +318,24 @@ type Item struct {
 	ItemBase
 
 	ItemID int64 `json:"item_id"`
+	PriceInfo []PriceInfo `json:"price_info"`
+	StockInfo []StockInfo `json:"stock_info"`
 }
 
 // https://open.shopee.com/documents?module=89&type=1&id=616&version=2
 type AddItemResponse struct {
 	BaseResponse
 
-	Response Item `json:"response"`
-	ItemDangerous int `json:"item_dangerous"` // TODO: why here again?
+	Response AddItemResponseData `json:"response"`
+	ItemDangerous int `json:"item_dangerous"` // TODO: why here again? error https://open.shopee.com/documents?module=89&type=1&id=616&version=2
+}
+
+type AddItemResponseData struct {
+	ItemBase
+
+	ItemID int64 `json:"item_id"`
+	PriceInfo PriceInfo `json:"price_info"`
+	StockInfo StockInfo `json:"stock_info"`
 }
 
 func (s *ProductServiceOp)AddItem(sid int64,item AddItemRequest, tok string)(*AddItemResponse, error) {
@@ -385,12 +414,14 @@ type Model struct {
 
 type StockInfo struct {
 	StockType int `json:"stock_type"`
+	StockLocationID string `json:"stock_location_id"`
 	NormalStock int `json:"normal_stock"`
 	CurrentStock int `json:"current_stock"`
 	ReservedStock int `json:"reserved_stock"`
 }
 
 type PriceInfo struct {
+	Currency string `json:"currency"`
 	OriginalPrice float64 `json:"original_price"`
 	CurrentPrice float64 `json:"current_price"`
 	InflatedPriceOfOriginalPrice float64 `json:"inflated_price_of_original_price"`
@@ -467,6 +498,32 @@ func (s *ProductServiceOp)	GetModelList(sid, itemID int64, tok string) (*GetMode
 	}
 
 	resp := new(GetModelListResponse)
+	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
+	return resp, err
+}
+
+type GetItemBaseInfoRequest struct {
+	ItemIDList []int64 `url:"item_id_list"`
+}
+
+type GetItemBaseInfoResponse struct {
+	BaseResponse
+
+	Response GetItemBaseInfoResponseData `json:"response"`
+}
+
+type GetItemBaseInfoResponseData struct {
+	ItemList []Item `json:"item_list"`
+}
+
+func (s *ProductServiceOp)	GetItemBaseInfo(sid int64, itemIDs []int64, tok string) (*GetItemBaseInfoResponse,error){
+	path := "/product/get_item_base_info"
+
+	opt:=GetItemBaseInfoRequest{
+		ItemIDList: itemIDs,
+	}
+
+	resp := new(GetItemBaseInfoResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
 	return resp, err
 }
