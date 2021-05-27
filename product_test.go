@@ -241,3 +241,23 @@ func Test_GetItemBaseInfo(t *testing.T) {
 		t.Errorf("Image ID returned %+v, expected %+v",res.Response.ItemList[0].Image.ImageIDList[0] , expected)
 	}
 }
+
+func Test_DeleteItem(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/delete_item",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("response.json")))
+
+	res,err:=client.Product.DeleteItem(shopID,34001,accessToken)
+	if err!=nil {
+		t.Errorf("Product.DeleteItem error: %s",err)
+	}
+
+	t.Logf("Product.DeleteItem: %#v",res)
+
+	var expected string = "f634ea27eff8461b8f6f9ffa1d7ddab2"
+	if res.RequestID != expected {
+		t.Errorf("res.RequestID returned %+v, expected %+v", res.RequestID  , expected)
+	}
+}

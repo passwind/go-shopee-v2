@@ -9,6 +9,7 @@ type ProductService interface {
 	UpdateSizeChart(int64, int64, string, string)(*UpdateSizeChartResponse, error)
 	GetItemBaseInfo(int64, []int64, string) (*GetItemBaseInfoResponse, error)
 	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
+	DeleteItem(int64, int64, string) (*BaseResponse, error)
 	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
 	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
 	GetModelList(int64, int64, string) (*GetModelListResponse, error)
@@ -525,5 +526,15 @@ func (s *ProductServiceOp)	GetItemBaseInfo(sid int64, itemIDs []int64, tok strin
 
 	resp := new(GetItemBaseInfoResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
+	return resp, err
+}
+
+func (s *ProductServiceOp)DeleteItem(sid, itemID int64, tok string)(*BaseResponse, error) {
+	path := "/product/delete_item"
+	resp := new(BaseResponse)
+	req:=map[string]interface{}{
+		"item_id": itemID,
+	}
+	err := s.client.WithShop(sid,tok).Post(path, req, resp)
 	return resp, err
 }
