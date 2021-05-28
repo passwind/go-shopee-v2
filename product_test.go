@@ -307,3 +307,23 @@ func Test_UnlistItem(t *testing.T) {
 		t.Errorf("FailureList[0].FailedReason returned %+v, expected %+v", res.Response.FailureList[0].FailedReason, expected)
 	}
 }
+
+func Test_DeleteModel(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/delete_model",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("delete_model_resp.json")))
+
+	res,err:=client.Product.DeleteModel(shopID,34001,123,accessToken)
+	if err!=nil {
+		t.Errorf("Product.DeleteModel error: %s",err)
+	}
+
+	t.Logf("Product.DeleteModel: %#v",res)
+
+	var expected string = "aaaaaaa"
+	if res.RequestID != expected {
+		t.Errorf("res.RequestID returned %+v, expected %+v", res.RequestID  , expected)
+	}
+}

@@ -13,8 +13,9 @@ type ProductService interface {
 	UpdateItem(int64, UpdateItemRequest, string) (*UpdateItemResponse, error)
 	UnlistItem(int64, UnlistItemRequest, string) (*UnlistItemResponse, error)
 	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
-	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
 	GetModelList(int64, int64, string) (*GetModelListResponse, error)
+	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
+	DeleteModel(int64, int64, int64, string) (*BaseResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -613,5 +614,17 @@ func (s *ProductServiceOp)UnlistItem(sid int64, data UnlistItemRequest, tok stri
 		return nil,err
 	}
 	err = s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+func (s *ProductServiceOp)DeleteModel(sid, itemID, modelID int64, tok string) (*BaseResponse, error) {
+	path := "/product/delete_model"
+	resp := new(BaseResponse)
+	req:=map[string]interface{}{
+		"item_id": itemID,
+		"model_id": modelID,
+	}
+
+	err := s.client.WithShop(sid,tok).Post(path, req, resp)
 	return resp, err
 }
