@@ -327,3 +327,26 @@ func Test_DeleteModel(t *testing.T) {
 		t.Errorf("res.RequestID returned %+v, expected %+v", res.RequestID  , expected)
 	}
 }
+
+func Test_UpdateModel(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/update_model",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("response.json")))
+
+	var req UpdateModelRequest
+	loadMockData("update_model_req.json",&req)
+
+	res,err:=client.Product.UpdateModel(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Product.UpdateModel error: %s",err)
+	}
+
+	t.Logf("Product.UpdateModel: %#v",res)
+
+	var expected string = "f634ea27eff8461b8f6f9ffa1d7ddab2"
+	if res.RequestID != expected {
+		t.Errorf("res.RequestID returned %+v, expected %+v", res.RequestID  , expected)
+	}
+}

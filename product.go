@@ -16,6 +16,7 @@ type ProductService interface {
 	GetModelList(int64, int64, string) (*GetModelListResponse, error)
 	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
 	DeleteModel(int64, int64, int64, string) (*BaseResponse, error)
+	UpdateModel(int64, UpdateModelRequest, string) (*UpdateModelResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -626,5 +627,26 @@ func (s *ProductServiceOp)DeleteModel(sid, itemID, modelID int64, tok string) (*
 	}
 
 	err := s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+type UpdateModelRequest struct {
+	ItemID int64 `json:"item_id"`
+	Model []Model `json:"model"`
+}
+
+// TODO: response is too simple? https://open.shopee.com/documents?module=89&type=1&id=648&version=2
+type UpdateModelResponse struct {
+	BaseResponse
+}
+
+func (s *ProductServiceOp)UpdateModel(sid int64, data UpdateModelRequest, tok string) (*UpdateModelResponse, error){
+	path := "/product/update_model"
+	resp := new(UpdateModelResponse)
+	req,err:=StructToMap(data)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
 	return resp, err
 }
