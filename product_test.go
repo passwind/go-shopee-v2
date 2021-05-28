@@ -350,3 +350,26 @@ func Test_UpdateModel(t *testing.T) {
 		t.Errorf("res.RequestID returned %+v, expected %+v", res.RequestID  , expected)
 	}
 }
+
+func Test_UpdatePrice(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/update_price",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("update_price_resp.json")))
+
+	var req UpdatePriceRequest
+	loadMockData("update_price_req.json",&req)
+
+	res,err:=client.Product.UpdatePrice(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Product.UpdatePrice error: %s",err)
+	}
+
+	t.Logf("Product.UpdatePrice: %#v",res)
+
+	var expected float64 = 11.11
+	if res.Response.SuccessList[0].OriginalPrice != expected {
+		t.Errorf("OriginalPrice returned %+v, expected %+v", res.Response.SuccessList[0].OriginalPrice  , expected)
+	}
+}

@@ -1,0 +1,9 @@
+{
+  "item_id": 1000,
+  "price_list": [
+    {
+      "model_id": 3456,
+      "original_price": 11.11
+    }
+  ]
+}

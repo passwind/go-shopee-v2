@@ -1,0 +1,20 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "aaaaaaa",
+  "response": {
+    "failure_list": [
+      {
+        "model_id": 3456,
+        "failed_reason": "fail"
+      }
+    ],
+    "success_list": [
+      {
+        "model_id": 0,
+        "original_price": 11.11
+      }
+    ]
+  }
+}
