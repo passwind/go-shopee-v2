@@ -11,6 +11,7 @@ type ProductService interface {
 	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
 	DeleteItem(int64, int64, string) (*BaseResponse, error)
 	UpdateItem(int64, UpdateItemRequest, string) (*UpdateItemResponse, error)
+	UnlistItem(int64, UnlistItemRequest, string) (*UnlistItemResponse, error)
 	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
 	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
 	GetModelList(int64, int64, string) (*GetModelListResponse, error)
@@ -567,6 +568,47 @@ func (s *ProductServiceOp)UpdateItem(sid int64,item UpdateItemRequest, tok strin
 	path := "/product/update_item"
 	resp := new(UpdateItemResponse)
 	req,err:=StructToMap(item)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+type UnlistItemRequest struct {
+	ItemList []UnlistItemReqData `json:"item_list"`
+}
+
+type UnlistItemReqData struct {
+	ItemID int64 `json:"item_id"`
+	Unlist bool `json:"unlist"`
+}
+
+type UnlistItemResponse struct {
+	BaseResponse
+
+	Response UnlistItemResponseData `json:"response"`
+}
+
+type UnlistItemResponseData struct {
+	FailureList []UnlistItemResponseDataFail `json:"failure_list"`
+	SuccessList []UnlistItemResponseDataSuccess `json:"success_list"`
+}
+
+type UnlistItemResponseDataFail struct {
+	ItemID int64 `json:"item_id"`
+	FailedReason string `json:"failed_reason"`
+}
+
+type UnlistItemResponseDataSuccess struct {
+	ItemID int64 `json:"item_id"`
+	Unlist bool `json:"unlist"` 
+}
+
+func (s *ProductServiceOp)UnlistItem(sid int64, data UnlistItemRequest, tok string)(*UnlistItemResponse, error) {
+	path := "/product/unlist_item"
+	resp := new(UnlistItemResponse)
+	req,err:=StructToMap(data)
 	if err!=nil {
 		return nil,err
 	}

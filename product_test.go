@@ -284,3 +284,26 @@ func Test_UpdateItem(t *testing.T) {
 		t.Errorf("LogisticName returned %+v, expected %+v", res.Response.LogisticInfo[1].LogisticName , expected)
 	}
 }
+
+func Test_UnlistItem(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/unlist_item",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("unlist_item_resp.json")))
+
+	var req UnlistItemRequest
+	loadMockData("unlist_item_req.json",&req)
+
+	res,err:=client.Product.UnlistItem(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Product.UnlistItem error: %s",err)
+	}
+
+	t.Logf("Product.UnlistItem: %#v",res)
+
+	var expected string = "Can't unlist item when item is under promotion"
+	if res.Response.FailureList[0].FailedReason != expected {
+		t.Errorf("FailureList[0].FailedReason returned %+v, expected %+v", res.Response.FailureList[0].FailedReason, expected)
+	}
+}

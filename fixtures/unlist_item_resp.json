@@ -1,0 +1,20 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "43133476d40c400897cc8c159a214034",
+  "response": {
+    "failure_list": [
+      {
+        "item_id": 2300069665,
+        "failed_reason": "Can't unlist item when item is under promotion"
+      }
+    ],
+    "success_list": [
+      {
+        "item_id": 2400143710,
+        "unlist": false
+      }
+    ]
+  }
+}
