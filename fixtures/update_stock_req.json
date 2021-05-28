@@ -1,0 +1,9 @@
+{
+  "item_id": 1000,
+  "stock_list": [
+    {
+      "model_id": 3456,
+      "normal_stock": 100
+    }
+  ]
+}

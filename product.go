@@ -18,6 +18,7 @@ type ProductService interface {
 	DeleteModel(int64, int64, int64, string) (*BaseResponse, error)
 	UpdateModel(int64, UpdateModelRequest, string) (*UpdateModelResponse, error)
 	UpdatePrice(int64, UpdatePriceRequest, string) (*UpdatePriceResponse, error)
+	UpdateStock(int64, UpdateStockRequest, string) (*UpdateStockResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -686,6 +687,48 @@ type UpdatePriceResponseDataSuccess struct {
 func (s *ProductServiceOp)UpdatePrice(sid int64, data UpdatePriceRequest, tok string) (*UpdatePriceResponse, error) {
 	path := "/product/update_price"
 	resp := new(UpdatePriceResponse)
+	req,err:=StructToMap(data)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+type UpdateStockRequest struct {
+	ItemID int64 `json:"item_id"`
+	StockList []UpdateStockRequestData `json:"stock_list"`
+}
+
+type UpdateStockRequestData struct {
+	ModelID int64 `json:"model_id"`
+	NormalStock int `json:"normal_stock"`
+}
+
+type UpdateStockResponse struct {
+	BaseResponse
+
+	Response UpdateStockResponseData `json:"response"`
+}
+
+type UpdateStockResponseData struct {
+	FailureList []UpdateStockResponseDataFail `json:"failure_list"`
+	SuccessList []UpdateStockResponseDataSuccess `json:"success_list"`
+}
+
+type UpdateStockResponseDataFail struct {
+	ModelID int64 `json:"model_id"`
+	FailedReason string `json:"failed_reason"`
+}
+
+type UpdateStockResponseDataSuccess struct {
+	ModelID int64 `json:"model_id"`
+	NormalStock int `json:"normal_stock"`
+}
+
+func (s *ProductServiceOp)UpdateStock(sid int64, data UpdateStockRequest, tok string) (*UpdateStockResponse, error) {
+	path := "/product/update_stock"
+	resp := new(UpdateStockResponse)
 	req,err:=StructToMap(data)
 	if err!=nil {
 		return nil,err
