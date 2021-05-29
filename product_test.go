@@ -396,3 +396,23 @@ func Test_UpdateStock(t *testing.T) {
 		t.Errorf("NormalStock returned %+v, expected %+v", res.Response.SuccessList[0].NormalStock  , expected)
 	}
 }
+
+func Test_CategoryRecommend(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/category_recommand",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("category_recommend_resp.json")))
+
+	res,err:=client.Product.CategoryRecommend(shopID,"test",accessToken)
+	if err!=nil {
+		t.Errorf("Product.CategoryRecommend error: %s",err)
+	}
+
+	t.Logf("Product.CategoryRecommend: %#v",res)
+
+	var expectedID int64 = 1000734
+	if res.Response.CategoryID[0] != expectedID {
+		t.Errorf("CategoryID returned %+v, expected %+v",res.Response.CategoryID[0] , expectedID)
+	}
+}

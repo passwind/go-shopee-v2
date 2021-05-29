@@ -19,6 +19,7 @@ type ProductService interface {
 	UpdateModel(int64, UpdateModelRequest, string) (*UpdateModelResponse, error)
 	UpdatePrice(int64, UpdatePriceRequest, string) (*UpdatePriceResponse, error)
 	UpdateStock(int64, UpdateStockRequest, string) (*UpdateStockResponse, error)
+	CategoryRecommend(int64, string, string) (*CategoryRecommendResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -734,5 +735,32 @@ func (s *ProductServiceOp)UpdateStock(sid int64, data UpdateStockRequest, tok st
 		return nil,err
 	}
 	err = s.client.WithShop(sid,tok).Post(path, req, resp)
+	return resp, err
+}
+
+type CategoryRecommendRequest struct {
+	ItemName string `json:"item_name"`
+}
+
+type CategoryRecommendResponse struct {
+	BaseResponse
+
+	Response CategoryRecommendResponseData `json:"response"`
+}
+
+type CategoryRecommendResponseData struct {
+	CategoryID []int64 `json:"category_id"` // TODO: sample is item_list? error
+}
+
+// https://open.shopee.com/documents?module=89&type=1&id=702&version=2
+func (s *ProductServiceOp)	CategoryRecommend(sid int64, itemName, tok string) (*CategoryRecommendResponse,error){
+	path := "/product/category_recommand" // TODO: recommand or recommend?
+
+	opt:=CategoryRecommendRequest{
+		ItemName: itemName,
+	}
+
+	resp := new(CategoryRecommendResponse)
+	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
 	return resp, err
 }
