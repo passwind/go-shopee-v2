@@ -4,6 +4,10 @@ Shopee API v2 with golang
 
 https://open.shopee.com/documents?module=87&type=2&id=58&version=2
 
+[go-shopee](https://github.com/passwind/go-shopee) for `Shopee API v1`
+
+Frankly, Shopee v2 is too different from v1. Have to set up this repo for v2.
+
 ## How to use
 
 Initialize Client And request shop info
@@ -26,3 +30,7 @@ Initialize Client And request shop info
   // fetch shop info
   client.Shop.GetShopInfo(sid, tok)
 ```
+
+## Thanks to
+
+- [go-shopify](https://github.com/bold-commerce/go-shopify) Inspire me and provide a base structure
