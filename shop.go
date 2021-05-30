@@ -2,6 +2,7 @@ package goshopee
 
 type ShopService interface {
 	GetShopInfo (uint64, string) (*GetShopInfoResponse, error)
+	GetProfile (uint64, string) (*GetProfileResponse, error)
 }
 
 type ShopServiceOp struct {
@@ -30,12 +31,30 @@ type GetShopInfoResponse struct {
 	ExpireTime int64 `json:"expire_time"`
 }
 
-
-
 func (s *ShopServiceOp)GetShopInfo (sid uint64, tok string) (*GetShopInfoResponse, error){
 	path := "shop/get_shop_info"
 
 	resp := new(GetShopInfoResponse)
+	err := s.client.WithShop(sid,tok).Get(path, resp, nil)
+	return resp, err
+}
+
+type GetProfileResponse struct {
+	BaseResponse
+
+	Response ShopProfile `json:"response"`
+}
+
+type ShopProfile struct {
+	ShopLogo string `json:"shop_logo"`
+	Description string `json:"description"`
+	ShopName string `json:"shop_name"`
+}
+
+func (s *ShopServiceOp)GetProfile (sid uint64, tok string) (*GetProfileResponse, error){
+	path := "shop/get_profile"
+
+	resp := new(GetProfileResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, nil)
 	return resp, err
 }

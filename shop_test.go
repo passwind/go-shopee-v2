@@ -26,3 +26,23 @@ func Test_GetShopInfo(t *testing.T) {
 		t.Errorf("SIPAffiShops[0].AffiShopID returned %+v, expected %+v",res.SIPAffiShops[0].AffiShopID , expectedID)
 	}
 }
+
+func Test_GetProfile(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/shop/get_profile",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("get_profile_resp.json")))
+
+	res,err:=client.Shop.GetProfile(shopID,accessToken)
+	if err!=nil {
+		t.Errorf("Shop.GetProfile error: %s",err)
+	}
+
+	t.Logf("Shop.GetProfile: %#v",res)
+
+	var expected string = "不错的shop，物美价廉"
+	if res.Response.Description != expected {
+		t.Errorf("Response.Description returned %+v, expected %+v",res.Response.Description, expected)
+	}
+}
