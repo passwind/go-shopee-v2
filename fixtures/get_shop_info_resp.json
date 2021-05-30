@@ -1,0 +1,36 @@
+{
+  "shop_name": "openapi_pshop_1",
+  "region": "TW",
+  "status": "NORMAL",
+  "sip_affi_shops": [
+    {
+      "affi_shop_id": 261373,
+      "region": "MY"
+    },
+    {
+      "affi_shop_id": 261374,
+      "region": "ID"
+    },
+    {
+      "affi_shop_id": 261375,
+      "region": "TH"
+    },
+    {
+      "affi_shop_id": 261376,
+      "region": "PH"
+    },
+    {
+      "affi_shop_id": 261377,
+      "region": "SG"
+    },
+    {
+      "affi_shop_id": 261378,
+      "region": "VN"
+    }
+  ],
+  "is_cb": true,
+  "is_cnsc": false,
+  "request_id": "0b8f39a76e6ada92247b416c768363ee",
+  "auth_time": 1610533441,
+  "expire_time": 1642069441
+}
