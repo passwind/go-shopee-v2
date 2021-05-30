@@ -307,6 +307,12 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}) (http.Header, er
 		resp.Body.Close()
 
 		if retries <= 1 {
+			content, _ := ioutil.ReadAll(resp.Body)
+			if content != nil {
+				if err := c.checkShopeeError(resp, content); err != nil {
+					return nil, err
+				}
+			}
 			return nil, respErr
 		}
 
