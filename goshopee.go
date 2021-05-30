@@ -59,8 +59,8 @@ type Client struct {
 
 	RateLimits RateLimitInfo
 
-	ShopID int64
-	AccountID int64
+	ShopID uint64
+	AccountID uint64
 	AccessToken string
 
 	// Services used for communicating with the API
@@ -229,13 +229,13 @@ func (c *Client) NewRequest(method, relPath string, body, options, headers inter
 	return req, nil
 }
 
-func (c *Client)WithShop(sid int64, tok string) *Client {
+func (c *Client)WithShop(sid uint64, tok string) *Client {
 	c.ShopID=sid
 	c.AccessToken=tok
 	return c
 }
 
-func (c *Client)WithMerchant(aid int64, tok string) *Client {
+func (c *Client)WithMerchant(aid uint64, tok string) *Client {
 	c.AccountID=aid
 	c.AccessToken=tok
 	return c

@@ -6,8 +6,8 @@ import "fmt"
 type AuthService interface {
 	GetAuthURL() (string,error)
 	GetCancelAuthURL() (string,error)
-	GetAccessToken(int64,int64,string) (*AccessTokenResponse,error)
-	RefreshAccessToken(int64,int64,string) (*RefreshAccessTokenResponse,error)
+	GetAccessToken(uint64,uint64,string) (*AccessTokenResponse,error)
+	RefreshAccessToken(uint64,uint64,string) (*RefreshAccessTokenResponse,error)
 }
 
 type AccessTokenResponse struct {
@@ -16,8 +16,8 @@ type AccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	ExpireIn int `json:"expire_in"`
-	MerchantIDList []int64 `json:"merchant_id_list,omitempty"`
-	ShopIDList []int64 `json:"shop_id_list,omitempty"`
+	MerchantIDList []uint64 `json:"merchant_id_list,omitempty"`
+	ShopIDList []uint64 `json:"shop_id_list,omitempty"`
 }
 
 type RefreshAccessTokenResponse struct {
@@ -26,9 +26,9 @@ type RefreshAccessTokenResponse struct {
 	AccessToken string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 	ExpireIn int `json:"expire_in"`
-	PartnerID int64 `json:"partner_id"`
-	MerchantID int64 `json:"merchant_id"`
-	ShopID int64 `json:"shop_id"`
+	PartnerID uint64 `json:"partner_id"`
+	MerchantID uint64 `json:"merchant_id"`
+	ShopID uint64 `json:"shop_id"`
 }
 
 type AuthServiceOp struct {
@@ -51,7 +51,7 @@ func (s *AuthServiceOp)GetCancelAuthURL() (string,error) {
 	return aurl,nil
 }
 
-func (s *AuthServiceOp)GetAccessToken(sid int64, aid int64, code string) (*AccessTokenResponse,error){
+func (s *AuthServiceOp)GetAccessToken(sid uint64, aid uint64, code string) (*AccessTokenResponse,error){
 	path := "/auth/token/get"
 	params := map[string]interface{}{
 		"code": code,
@@ -67,7 +67,7 @@ func (s *AuthServiceOp)GetAccessToken(sid int64, aid int64, code string) (*Acces
 	return resp, err
 }
 
-func (s *AuthServiceOp)RefreshAccessToken(sid int64, aid int64, refresh string) (*RefreshAccessTokenResponse,error){
+func (s *AuthServiceOp)RefreshAccessToken(sid uint64, aid uint64, refresh string) (*RefreshAccessTokenResponse,error){
 	path := "/auth/access_token/get"
 	params := map[string]interface{}{
 		"refresh_token": refresh,

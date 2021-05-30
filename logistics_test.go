@@ -24,7 +24,7 @@ func Test_GetChannelList(t *testing.T) {
 	if len(res.Response.LogisticsChannelList)!=5 {
 		t.Errorf("LogisticsChannelList len return %v, expected 5",len(res.Response.LogisticsChannelList))
 	}
-	var expectedID int64 = 5116
+	var expectedID uint64 = 5116
 	if res.Response.LogisticsChannelList[4].LogisticsChannelID != expectedID {
 		t.Errorf("LogisticsChannelList[4].LogisticsChannelID returned %+v, expected %+v",res.Response.LogisticsChannelList[4].LogisticsChannelID , expectedID)
 	}

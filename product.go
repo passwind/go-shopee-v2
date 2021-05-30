@@ -1,25 +1,25 @@
 package goshopee
 
 type ProductService interface {
-	GetCategory(int64, string, string) (*GetCategoryResponse,error)
-	GetBrandList(int64, int64, int, int, int, string) (*GetBrandListResponse, error)
-	GetDTSLimit(int64, int64, string) (*GetDTSLimitResponse, error)
-	GetAttributes(int64, int64, string, string) (*GetAttributesResponse, error)
-	SupportSizeChart(int64, int64, string) (*SupportSizeChartResponse, error)
-	UpdateSizeChart(int64, int64, string, string)(*UpdateSizeChartResponse, error)
-	GetItemBaseInfo(int64, []int64, string) (*GetItemBaseInfoResponse, error)
-	AddItem(int64, AddItemRequest, string)(*AddItemResponse,error)
-	DeleteItem(int64, int64, string) (*BaseResponse, error)
-	UpdateItem(int64, UpdateItemRequest, string) (*UpdateItemResponse, error)
-	UnlistItem(int64, UnlistItemRequest, string) (*UnlistItemResponse, error)
-	InitTierVariation(int64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
-	GetModelList(int64, int64, string) (*GetModelListResponse, error)
-	AddModel(int64, AddModelRequest, string)(*AddModelResponse, error)
-	DeleteModel(int64, int64, int64, string) (*BaseResponse, error)
-	UpdateModel(int64, UpdateModelRequest, string) (*UpdateModelResponse, error)
-	UpdatePrice(int64, UpdatePriceRequest, string) (*UpdatePriceResponse, error)
-	UpdateStock(int64, UpdateStockRequest, string) (*UpdateStockResponse, error)
-	CategoryRecommend(int64, string, string) (*CategoryRecommendResponse, error)
+	GetCategory(uint64, string, string) (*GetCategoryResponse,error)
+	GetBrandList(uint64, uint64, int, int, int, string) (*GetBrandListResponse, error)
+	GetDTSLimit(uint64, uint64, string) (*GetDTSLimitResponse, error)
+	GetAttributes(uint64, uint64, string, string) (*GetAttributesResponse, error)
+	SupportSizeChart(uint64, uint64, string) (*SupportSizeChartResponse, error)
+	UpdateSizeChart(uint64, uint64, string, string)(*UpdateSizeChartResponse, error)
+	GetItemBaseInfo(uint64, []uint64, string) (*GetItemBaseInfoResponse, error)
+	AddItem(uint64, AddItemRequest, string)(*AddItemResponse,error)
+	DeleteItem(uint64, uint64, string) (*BaseResponse, error)
+	UpdateItem(uint64, UpdateItemRequest, string) (*UpdateItemResponse, error)
+	UnlistItem(uint64, UnlistItemRequest, string) (*UnlistItemResponse, error)
+	InitTierVariation(uint64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
+	GetModelList(uint64, uint64, string) (*GetModelListResponse, error)
+	AddModel(uint64, AddModelRequest, string)(*AddModelResponse, error)
+	DeleteModel(uint64, uint64, uint64, string) (*BaseResponse, error)
+	UpdateModel(uint64, UpdateModelRequest, string) (*UpdateModelResponse, error)
+	UpdatePrice(uint64, UpdatePriceRequest, string) (*UpdatePriceResponse, error)
+	UpdateStock(uint64, UpdateStockRequest, string) (*UpdateStockResponse, error)
+	CategoryRecommend(uint64, string, string) (*CategoryRecommendResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -33,8 +33,8 @@ type GetCategoryResponseData struct {
 }
 
 type Category struct {
-	CategoryID int64 `json:"category_id"`
-	ParentCategoryID int64 `json:"parent_category_id"`
+	CategoryID uint64 `json:"category_id"`
+	ParentCategoryID uint64 `json:"parent_category_id"`
 	OriginalCategoryName string `json:"original_category_name"`
 	DisplayCategoryName string `json:"display_category_name"`
 	HasChildren bool `json:"has_children"`
@@ -48,7 +48,7 @@ type GetCategoryRequest struct {
 	Language string `url:"language"`
 }
 
-func (s *ProductServiceOp)	GetCategory(sid int64, lang, tok string) (*GetCategoryResponse,error){
+func (s *ProductServiceOp)	GetCategory(sid uint64, lang, tok string) (*GetCategoryResponse,error){
 	path := "/product/get_category"
 
 	opt:=GetCategoryRequest{
@@ -63,7 +63,7 @@ func (s *ProductServiceOp)	GetCategory(sid int64, lang, tok string) (*GetCategor
 type GetBrandListRequest struct {
 	Offset int `url:"offset"`
 	PageSize int `url:"page_size"`
-	CategoryID int64 `url:"category_id"`
+	CategoryID uint64 `url:"category_id"`
 	Status int `url:"status"`
 }
 
@@ -82,12 +82,12 @@ type GetBrandListResponseData struct {
 }
 
 type Brand struct {
-	BrandID int64 `json:"brand_id"`
+	BrandID uint64 `json:"brand_id"`
 	OriginalBrandName string `json:"original_brand_name"`
 	DisplayBrandName string `json:"display_brand_name"`
 }
 
-func (s *ProductServiceOp)	GetBrandList(sid, cid int64, status, offset, pageSize int, tok string) (*GetBrandListResponse, error){
+func (s *ProductServiceOp)	GetBrandList(sid, cid uint64, status, offset, pageSize int, tok string) (*GetBrandListResponse, error){
 	path := "/product/get_brand_list"
 
 	opt:=GetBrandListRequest{
@@ -103,7 +103,7 @@ func (s *ProductServiceOp)	GetBrandList(sid, cid int64, status, offset, pageSize
 }
 
 type GetDTSLimitRequest struct {
-	CategoryID int64 `url:"category_id"`
+	CategoryID uint64 `url:"category_id"`
 }
 
 type GetDTSLimitResponse struct {
@@ -122,7 +122,7 @@ type DaysToShipLimit struct {
 	MaxLimit int `json:"max_limit"`
 }
 
-func (s *ProductServiceOp)	GetDTSLimit(sid, cid int64, tok string) (*GetDTSLimitResponse, error){
+func (s *ProductServiceOp)	GetDTSLimit(sid, cid uint64, tok string) (*GetDTSLimitResponse, error){
 	path := "/product/get_dts_limit"
 
 	opt:=GetDTSLimitRequest{
@@ -135,7 +135,7 @@ func (s *ProductServiceOp)	GetDTSLimit(sid, cid int64, tok string) (*GetDTSLimit
 }
 
 type GetAttibutesRequest struct {
-	CategoryID int64 `url:"category_id"`
+	CategoryID uint64 `url:"category_id"`
 	Language string `url:"language"`
 }
 
@@ -150,7 +150,7 @@ type GetAttributesResponseData struct {
 }
 
 type Attribute struct {
-	AttributeID int64 `json:"attribute_id"`
+	AttributeID uint64 `json:"attribute_id"`
 	OriginalAttributeName string `json:"original_attribute_name"`
 	DisplayAttributeName string `json:"display_attribute_name"`
 	IsMandatory bool `json:"is_mandatory"`
@@ -163,7 +163,7 @@ type Attribute struct {
 }
 
 type AttributeValue struct {
-	ValueID int64 `json:"value_id"`
+	ValueID uint64 `json:"value_id"`
 	OriginalValueName string `json:"original_value_name"`
 	DisplayValueName string `json:"display_value_name"`
 	ValueUnit string `json:"value_unit"`
@@ -172,15 +172,15 @@ type AttributeValue struct {
 }
 
 type ParentAttribute struct {
-	ParentAttributeID int64 `json:"parent_attribute_id"`
-	ParentValueID int64 `json:"parent_value_id"`
+	ParentAttributeID uint64 `json:"parent_attribute_id"`
+	ParentValueID uint64 `json:"parent_value_id"`
 } 
 
 type ParentBrand struct {
-	ParentBrandID int64 `json:"parent_brand_id"`
+	ParentBrandID uint64 `json:"parent_brand_id"`
 }
 
-func (s *ProductServiceOp)	GetAttributes(sid, cid int64, lang, tok string) (*GetAttributesResponse, error){
+func (s *ProductServiceOp)	GetAttributes(sid, cid uint64, lang, tok string) (*GetAttributesResponse, error){
 	path := "/product/get_attributes"
 
 	opt:=GetAttibutesRequest{
@@ -194,7 +194,7 @@ func (s *ProductServiceOp)	GetAttributes(sid, cid int64, lang, tok string) (*Get
 }
 
 type SupportSizeChartRequest struct {
-	CategoryID int64 `url:"category_id"`
+	CategoryID uint64 `url:"category_id"`
 }
 
 type SupportSizeChartResponse struct {
@@ -207,7 +207,7 @@ type SupportSizeChartResponseData struct {
 	SupportSizeChart bool `json:"support_size_chart"`
 }
 
-func (s *ProductServiceOp)SupportSizeChart(sid, cid int64, tok string) (*SupportSizeChartResponse, error){
+func (s *ProductServiceOp)SupportSizeChart(sid, cid uint64, tok string) (*SupportSizeChartResponse, error){
 	path := "/product/support_size_chart"
 
 	opt:=SupportSizeChartRequest{
@@ -223,7 +223,7 @@ type UpdateSizeChartResponse struct {
 	BaseResponse
 }
 
-func (s *ProductServiceOp)UpdateSizeChart(sid, itemID int64, sizeChart,tok string)(*UpdateSizeChartResponse, error) {
+func (s *ProductServiceOp)UpdateSizeChart(sid, itemID uint64, sizeChart,tok string)(*UpdateSizeChartResponse, error) {
 	path := "/product/update_size_chart"
 	wrappedData := map[string]interface{}{
 		"item_id": itemID,
@@ -243,12 +243,12 @@ type AddItemRequest struct {
 }
 
 type ItemBase struct {
-	CategoryID int64 `json:"category_id"`
+	CategoryID uint64 `json:"category_id"`
 	ItemName string `json:"item_name"`
 	Description string `json:"description"`
 	ItemSKU string `json:"item_sku"`
-	CreateTime int64 `json:"create_time"`
-	UpdateTime int64 `json:"update_time"`
+	CreateTime uint64 `json:"create_time"`
+	UpdateTime uint64 `json:"update_time"`
 	AttributeList []ItemAttribute `json:"attribute_list"`
 	Image ItemImage `json:"image"`
 	Weight float64 `json:"weight"` // int or float? sample is "1.000"? or string? https://open.shopee.com/documents?module=89&type=1&id=616&version=2
@@ -260,7 +260,7 @@ type ItemBase struct {
 	SizeChart string `json:"size_chart"`
 	ItemStatus string `json:"item_status"`
 	HasModel bool `json:"has_model"`
-	PromotionID int64 `json:"promotion_id"`
+	PromotionID uint64 `json:"promotion_id"`
 	VideoInfo []ItemVideo `json:"video_info"`
 	Brand ItemBrand `json:"brand"`
 	ItemDangerous int `json:"item_dangerous"`
@@ -280,22 +280,22 @@ type Dimension struct {
 }
 
 type LogisticInfo struct {
-	LogisticID int64 `json:"logistic_id"`
+	LogisticID uint64 `json:"logistic_id"`
 	LogisticName string `json:"logistic_name"`
 	Enabled bool `json:"enabled"`
 	ShippingFee float64 `json:"shipping_fee"`
-	SizeID int64 `json:"size_id"`
+	SizeID uint64 `json:"size_id"`
 	IsFree bool `json:"is_free"`
 	EstimatedShippingFee float64 `json:"estimated_shipping_fee"` // TODO: boolean ? https://open.shopee.com/documents?module=89&type=1&id=612&version=2
 }
 
 type ItemAttribute struct {
-	AttributeID int64 `json:"attribute_id"`
+	AttributeID uint64 `json:"attribute_id"`
 	AttributeValueList []ItemAttributeValue `json:"attribute_value_list"`
 }
 
 type ItemAttributeValue struct {
-	ValueId int64 `json:"value_id"`
+	ValueId uint64 `json:"value_id"`
 	OriginalValueName string `json:"original_value_name"`
 	ValueUnit string `json:"value_unit"`
 }
@@ -318,14 +318,14 @@ type ItemWholesale struct {
 }
 
 type ItemBrand struct {
-	BrandID int64 `json:"brand_id"`
+	BrandID uint64 `json:"brand_id"`
 	OriginalBrandName string `json:"original_brand_name"`
 }
 
 type Item struct {
 	ItemBase
 
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	PriceInfo []PriceInfo `json:"price_info"`
 	StockInfo []StockInfo `json:"stock_info"`
 }
@@ -341,12 +341,12 @@ type AddItemResponse struct {
 type AddItemResponseData struct {
 	ItemBase
 
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	PriceInfo PriceInfo `json:"price_info"`
 	StockInfo StockInfo `json:"stock_info"`
 }
 
-func (s *ProductServiceOp)AddItem(sid int64,item AddItemRequest, tok string)(*AddItemResponse, error) {
+func (s *ProductServiceOp)AddItem(sid uint64,item AddItemRequest, tok string)(*AddItemResponse, error) {
 	path := "/product/add_item"
 	resp := new(AddItemResponse)
 	req,err:=StructToMap(item)
@@ -358,7 +358,7 @@ func (s *ProductServiceOp)AddItem(sid int64,item AddItemRequest, tok string)(*Ad
 }
 
 type InitTierVariationRequest struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	TierVariation []TierVariation `json:"tier_variation"`
 	Model []InitTierVariationRequestModel `json:"model"`
 }
@@ -392,7 +392,7 @@ type InitTierVariationResponse struct {
 }
 
 type InitTierVariationResponseData struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	TierVariation []InitTierVariationResponseDataTierVariation `json:"tier_variation"`
 	Model []Model `json:"model"`
 }
@@ -413,11 +413,11 @@ type InitTierVariationResponseDataTierVariationTierVariationOptionImage struct {
 
 type Model struct {
 	TierIndex []int `json:"tier_index"`
-	ModelID int64 `json:"model_id"`
+	ModelID uint64 `json:"model_id"`
 	ModelSKU string `json:"model_sku"`
 	StockInfo []StockInfo `json:"stock_info"`
 	PriceInfo []PriceInfo `json:"price_info"`
-	PromotionID int64 `json:"promotion_id"`
+	PromotionID uint64 `json:"promotion_id"`
 }
 
 type StockInfo struct {
@@ -438,7 +438,7 @@ type PriceInfo struct {
 	SipItemPriceSource string `json:"sip_item_price_source"`
 }
 
-func (s *ProductServiceOp)InitTierVariation(sid int64,vars InitTierVariationRequest, tok string)(*InitTierVariationResponse, error) {
+func (s *ProductServiceOp)InitTierVariation(sid uint64,vars InitTierVariationRequest, tok string)(*InitTierVariationResponse, error) {
 	path := "/product/init_tier_variation"
 	resp := new(InitTierVariationResponse)
 	req,err:=StructToMap(vars)
@@ -451,7 +451,7 @@ func (s *ProductServiceOp)InitTierVariation(sid int64,vars InitTierVariationRequ
 
 // https://open.shopee.com/documents?module=89&type=1&id=649&version=2
 type AddModelRequest struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	ModelList []AddModelRequestModel `json:"model_list"`
 }
 
@@ -472,7 +472,7 @@ type AddModelResponseData struct {
 	Model []Model `json:"model"`
 }
 
-func (s *ProductServiceOp)AddModel(sid int64,vars AddModelRequest, tok string)(*AddModelResponse, error) {
+func (s *ProductServiceOp)AddModel(sid uint64,vars AddModelRequest, tok string)(*AddModelResponse, error) {
 	path := "/product/add_model"
 	resp := new(AddModelResponse)
 	req,err:=StructToMap(vars)
@@ -484,7 +484,7 @@ func (s *ProductServiceOp)AddModel(sid int64,vars AddModelRequest, tok string)(*
 }
 
 type GetModelListRequest struct {
-	ItemID int64 `url:"item_id"`
+	ItemID uint64 `url:"item_id"`
 }
 
 type GetModelListResponse struct {
@@ -498,7 +498,7 @@ type GetModelListResponseData struct {
 	Model []Model `json:"model"`
 }
 
-func (s *ProductServiceOp)	GetModelList(sid, itemID int64, tok string) (*GetModelListResponse,error){
+func (s *ProductServiceOp)	GetModelList(sid, itemID uint64, tok string) (*GetModelListResponse,error){
 	path := "/product/get_model_list"
 
 	opt:=GetModelListRequest{
@@ -511,7 +511,7 @@ func (s *ProductServiceOp)	GetModelList(sid, itemID int64, tok string) (*GetMode
 }
 
 type GetItemBaseInfoRequest struct {
-	ItemIDList []int64 `url:"item_id_list"`
+	ItemIDList []uint64 `url:"item_id_list"`
 }
 
 type GetItemBaseInfoResponse struct {
@@ -524,7 +524,7 @@ type GetItemBaseInfoResponseData struct {
 	ItemList []Item `json:"item_list"`
 }
 
-func (s *ProductServiceOp)	GetItemBaseInfo(sid int64, itemIDs []int64, tok string) (*GetItemBaseInfoResponse,error){
+func (s *ProductServiceOp)	GetItemBaseInfo(sid uint64, itemIDs []uint64, tok string) (*GetItemBaseInfoResponse,error){
 	path := "/product/get_item_base_info"
 
 	opt:=GetItemBaseInfoRequest{
@@ -536,7 +536,7 @@ func (s *ProductServiceOp)	GetItemBaseInfo(sid int64, itemIDs []int64, tok strin
 	return resp, err
 }
 
-func (s *ProductServiceOp)DeleteItem(sid, itemID int64, tok string)(*BaseResponse, error) {
+func (s *ProductServiceOp)DeleteItem(sid, itemID uint64, tok string)(*BaseResponse, error) {
 	path := "/product/delete_item"
 	resp := new(BaseResponse)
 	req:=map[string]interface{}{
@@ -549,7 +549,7 @@ func (s *ProductServiceOp)DeleteItem(sid, itemID int64, tok string)(*BaseRespons
 type UpdateItemRequest struct {
 	ItemBase
 
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	OriginalPrice float64 `json:"original_price"`
 	NormalStock int `json:"normal_stock"`
 	VideoUploadID []string `json:"video_upload_id"`
@@ -564,12 +564,12 @@ type UpdateItemResponse struct {
 type UpdateItemResponseData struct {
 	ItemBase
 
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	PriceInfo PriceInfo `json:"price_info"`
 	StockInfo StockInfo `json:"stock_info"`
 }
 
-func (s *ProductServiceOp)UpdateItem(sid int64,item UpdateItemRequest, tok string)(*UpdateItemResponse, error) {
+func (s *ProductServiceOp)UpdateItem(sid uint64,item UpdateItemRequest, tok string)(*UpdateItemResponse, error) {
 	path := "/product/update_item"
 	resp := new(UpdateItemResponse)
 	req,err:=StructToMap(item)
@@ -585,7 +585,7 @@ type UnlistItemRequest struct {
 }
 
 type UnlistItemReqData struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	Unlist bool `json:"unlist"`
 }
 
@@ -601,16 +601,16 @@ type UnlistItemResponseData struct {
 }
 
 type UnlistItemResponseDataFail struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	FailedReason string `json:"failed_reason"`
 }
 
 type UnlistItemResponseDataSuccess struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	Unlist bool `json:"unlist"` 
 }
 
-func (s *ProductServiceOp)UnlistItem(sid int64, data UnlistItemRequest, tok string)(*UnlistItemResponse, error) {
+func (s *ProductServiceOp)UnlistItem(sid uint64, data UnlistItemRequest, tok string)(*UnlistItemResponse, error) {
 	path := "/product/unlist_item"
 	resp := new(UnlistItemResponse)
 	req,err:=StructToMap(data)
@@ -621,7 +621,7 @@ func (s *ProductServiceOp)UnlistItem(sid int64, data UnlistItemRequest, tok stri
 	return resp, err
 }
 
-func (s *ProductServiceOp)DeleteModel(sid, itemID, modelID int64, tok string) (*BaseResponse, error) {
+func (s *ProductServiceOp)DeleteModel(sid, itemID, modelID uint64, tok string) (*BaseResponse, error) {
 	path := "/product/delete_model"
 	resp := new(BaseResponse)
 	req:=map[string]interface{}{
@@ -634,7 +634,7 @@ func (s *ProductServiceOp)DeleteModel(sid, itemID, modelID int64, tok string) (*
 }
 
 type UpdateModelRequest struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	Model []Model `json:"model"`
 }
 
@@ -643,7 +643,7 @@ type UpdateModelResponse struct {
 	BaseResponse
 }
 
-func (s *ProductServiceOp)UpdateModel(sid int64, data UpdateModelRequest, tok string) (*UpdateModelResponse, error){
+func (s *ProductServiceOp)UpdateModel(sid uint64, data UpdateModelRequest, tok string) (*UpdateModelResponse, error){
 	path := "/product/update_model"
 	resp := new(UpdateModelResponse)
 	req,err:=StructToMap(data)
@@ -655,12 +655,12 @@ func (s *ProductServiceOp)UpdateModel(sid int64, data UpdateModelRequest, tok st
 }
 
 type UpdatePriceRequest struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	PriceList []UpdatePriceRequestData `json:"price_list"`
 }
 
 type UpdatePriceRequestData struct {
-	ModelID int64 `json:"model_id"`
+	ModelID uint64 `json:"model_id"`
 	OriginalPrice float64 `json:"original_price"`
 }
 
@@ -676,16 +676,16 @@ type UpdatePriceResponseData struct {
 }
 
 type UpdatePriceResponseDataFail struct {
-	ModelID int64 `json:"model_id"`
+	ModelID uint64 `json:"model_id"`
 	FailedReason string `json:"failed_reason"`
 }
 
 type UpdatePriceResponseDataSuccess struct {
-	ModelID int64 `json:"model_id"`
+	ModelID uint64 `json:"model_id"`
 	OriginalPrice float64 `json:"original_price"`
 }
 
-func (s *ProductServiceOp)UpdatePrice(sid int64, data UpdatePriceRequest, tok string) (*UpdatePriceResponse, error) {
+func (s *ProductServiceOp)UpdatePrice(sid uint64, data UpdatePriceRequest, tok string) (*UpdatePriceResponse, error) {
 	path := "/product/update_price"
 	resp := new(UpdatePriceResponse)
 	req,err:=StructToMap(data)
@@ -697,12 +697,12 @@ func (s *ProductServiceOp)UpdatePrice(sid int64, data UpdatePriceRequest, tok st
 }
 
 type UpdateStockRequest struct {
-	ItemID int64 `json:"item_id"`
+	ItemID uint64 `json:"item_id"`
 	StockList []UpdateStockRequestData `json:"stock_list"`
 }
 
 type UpdateStockRequestData struct {
-	ModelID int64 `json:"model_id"`
+	ModelID uint64 `json:"model_id"`
 	NormalStock int `json:"normal_stock"`
 }
 
@@ -718,16 +718,16 @@ type UpdateStockResponseData struct {
 }
 
 type UpdateStockResponseDataFail struct {
-	ModelID int64 `json:"model_id"`
+	ModelID uint64 `json:"model_id"`
 	FailedReason string `json:"failed_reason"`
 }
 
 type UpdateStockResponseDataSuccess struct {
-	ModelID int64 `json:"model_id"`
+	ModelID uint64 `json:"model_id"`
 	NormalStock int `json:"normal_stock"`
 }
 
-func (s *ProductServiceOp)UpdateStock(sid int64, data UpdateStockRequest, tok string) (*UpdateStockResponse, error) {
+func (s *ProductServiceOp)UpdateStock(sid uint64, data UpdateStockRequest, tok string) (*UpdateStockResponse, error) {
 	path := "/product/update_stock"
 	resp := new(UpdateStockResponse)
 	req,err:=StructToMap(data)
@@ -749,11 +749,11 @@ type CategoryRecommendResponse struct {
 }
 
 type CategoryRecommendResponseData struct {
-	CategoryID []int64 `json:"category_id"` // TODO: sample is item_list? error
+	CategoryID []uint64 `json:"category_id"` // TODO: sample is item_list? error
 }
 
 // https://open.shopee.com/documents?module=89&type=1&id=702&version=2
-func (s *ProductServiceOp)	CategoryRecommend(sid int64, itemName, tok string) (*CategoryRecommendResponse,error){
+func (s *ProductServiceOp)	CategoryRecommend(sid uint64, itemName, tok string) (*CategoryRecommendResponse,error){
 	path := "/product/category_recommand" // TODO: recommand or recommend?
 
 	opt:=CategoryRecommendRequest{

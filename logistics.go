@@ -1,7 +1,7 @@
 package goshopee
 
 type LogisticsService interface {
-	GetChannelList(int64, string) (*GetChannelListResponse, error)
+	GetChannelList(uint64, string) (*GetChannelListResponse, error)
 }
 
 type LogisticsServiceOp struct{
@@ -19,11 +19,11 @@ type GetChannelListResponseData struct {
 	LogisticsChannelList []LogisticsChannel `json:"logistics"` // TODO: or logistics_channel_list ?
 	LogisticsDescription string `json:"logistics_description"`
 	ForceEnabled bool `json:"force_enabled"`
-	MaskChannelID int64 `json:"mask_channel_id"`
+	MaskChannelID uint64 `json:"mask_channel_id"`
 }
 
 type LogisticsChannel struct {
-	LogisticsChannelID int64 `json:"logistics_channel_id"`
+	LogisticsChannelID uint64 `json:"logistics_channel_id"`
 	Preferred bool `json:"preferred"`
 	LogisticsChannelName string `json:"logistics_channel_name"`
 	CODEnabled bool `json:"cod_enabled"`
@@ -58,7 +58,7 @@ type VolumeLimit struct {
 	ItemMinVolume float64 `json:"item_min_volume"`
 }
 
-func (s *LogisticsServiceOp)GetChannelList(sid int64, tok string) (*GetChannelListResponse, error){
+func (s *LogisticsServiceOp)GetChannelList(sid uint64, tok string) (*GetChannelListResponse, error){
 	path := "/logistics/get_channel_list"
 
 	resp := new(GetChannelListResponse)

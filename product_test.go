@@ -21,7 +21,7 @@ func Test_GetCategory(t *testing.T) {
 
 	t.Logf("Product.GetCategory: %#v",res)
 
-	var expectedID int64 = 123
+	var expectedID uint64 = 123
 	if res.Response.CategoryList[0].CategoryID != expectedID {
 		t.Errorf("CategoryID returned %+v, expected %+v",res.Response.CategoryList[0].CategoryID , expectedID)
 	}
@@ -41,7 +41,7 @@ func Test_GetBrandList(t *testing.T) {
 
 	t.Logf("Product.GetBrandList: %#v",res)
 
-	var expectedID int64 = 2500139861
+	var expectedID uint64 = 2500139861
 	if res.Response.BrandList[0].BrandID != expectedID {
 		t.Errorf("BrandID returned %+v, expected %+v",res.Response.BrandList[0].BrandID , expectedID)
 	}
@@ -81,12 +81,12 @@ func Test_GetAttributes(t *testing.T) {
 
 	t.Logf("Product.GetAttributes: %#v",res)
 
-	var expectedID int64 = 123
+	var expectedID uint64 = 123
 	if res.Response.AttributeList[0].AttributeID != expectedID {
 		t.Errorf("AttributeList[0].AttributeID returned %+v, expected %+v",res.Response.AttributeList[0].AttributeID , expectedID)
 	}
 
-	var expectedBrandID int64 = 2134
+	var expectedBrandID uint64 = 2134
 	if res.Response.AttributeList[0].AttributeValueList[0].ParentBrandList[0].ParentBrandID != expectedBrandID {
 		t.Errorf("AttributeList[0].AttributeValueList[0].ParentBrandList[0].ParentBrandID returned %+v, expected %+v",res.Response.AttributeList[0].AttributeValueList[0].ParentBrandList[0].ParentBrandID , expectedBrandID)
 	}
@@ -149,7 +149,7 @@ func Test_AddItem(t *testing.T) {
 
 	t.Logf("Product.AddItem: %#v",res)
 
-	var expectedID int64 = 3000142341
+	var expectedID uint64 = 3000142341
 	if res.Response.ItemID != expectedID {
 		t.Errorf("ItemID returned %+v, expected %+v", res.Response.ItemID , expectedID)
 	}
@@ -172,7 +172,7 @@ func Test_InitTierVariation(t *testing.T) {
 
 	t.Logf("Product.InitTierVariation: %#v",res)
 
-	var expectedID int64 = 12345
+	var expectedID uint64 = 12345
 	if res.Response.Model[0].ModelID != expectedID {
 		t.Errorf("ModelID returned %+v, expected %+v", res.Response.Model[0].ModelID , expectedID)
 	}
@@ -215,7 +215,7 @@ func Test_GetModelListt(t *testing.T) {
 
 	t.Logf("Product.GetModelList: %#v",res)
 
-	var expected int64 = 2000458802
+	var expected uint64 = 2000458802
 	if res.Response.Model[0].ModelID != expected {
 		t.Errorf("ModelID returned %+v, expected %+v",res.Response.Model[0].ModelID , expected)
 	}
@@ -228,7 +228,7 @@ func Test_GetItemBaseInfo(t *testing.T) {
 	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/get_item_base_info",app.APIURL),
 		httpmock.NewBytesResponder(200, loadFixture("get_item_base_info_resp.json")))
 
-	res,err:=client.Product.GetItemBaseInfo(shopID,[]int64{123,356},accessToken)
+	res,err:=client.Product.GetItemBaseInfo(shopID,[]uint64{123,356},accessToken)
 	if err!=nil {
 		t.Errorf("Product.GetItemBaseInfo error: %s",err)
 	}
@@ -411,7 +411,7 @@ func Test_CategoryRecommend(t *testing.T) {
 
 	t.Logf("Product.CategoryRecommend: %#v",res)
 
-	var expectedID int64 = 1000734
+	var expectedID uint64 = 1000734
 	if res.Response.CategoryID[0] != expectedID {
 		t.Errorf("CategoryID returned %+v, expected %+v",res.Response.CategoryID[0] , expectedID)
 	}
