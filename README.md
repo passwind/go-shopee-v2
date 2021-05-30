@@ -22,6 +22,9 @@ Initialize Client And request shop info
 
 	client := goshopee.NewClient(app, goshopee.WithRetry(3), goshopee.WithLogger(NewLogger()))
 
+  // auth url
+  authUrl, err := client.Auth.GetAuthURL()
+
   // fetch access token
   // code from https://yourdomain/usercallback?code=xxxxx&shop_id=123456
   res, err: client.Auth.GetAccessToken(sid, 0, code)
