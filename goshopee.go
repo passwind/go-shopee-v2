@@ -283,9 +283,19 @@ func (c *Client) makeSignature(req *http.Request, paramStr string) (string,int64
 }
 
 // doGetHeaders executes a request, decoding the response into `v` and also returns any response headers.
-func (c *Client) doGetHeaders(req *http.Request, v interface{}) (http.Header, error) {
+func (c *Client) doGetHeaders(req *http.Request, v interface{}) (h http.Header, err error) {
 	var resp *http.Response
-	var err error
+
+	defer func() {
+		if resp!=nil && resp.Body!=nil {
+			if content, _ := ioutil.ReadAll(resp.Body); content != nil {
+				if err1 := c.checkShopeeError(resp, content); err1 != nil {
+					err=err1
+				}				
+			}
+		}
+	}()
+	
 	retries := c.retries
 	c.attempts = 0
 	c.logRequest(req)
@@ -307,12 +317,6 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}) (http.Header, er
 		resp.Body.Close()
 
 		if retries <= 1 {
-			content, _ := ioutil.ReadAll(resp.Body)
-			if content != nil {
-				if err := c.checkShopeeError(resp, content); err != nil {
-					return nil, err
-				}
-			}
 			return nil, respErr
 		}
 
@@ -373,7 +377,7 @@ func (c *Client) checkShopeeError(r *http.Response, bodyBytes []byte) error {
 		}
 
 		if serr.Error!="" {
-			return fmt.Errorf("shopee_error: %s %s",serr.Error,serr.Message)
+			return fmt.Errorf("shopee_error: %s [%s]",serr.Error,serr.Message)
 		}
 	}
 
