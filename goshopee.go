@@ -407,11 +407,10 @@ func wrapSpecificError(r *http.Response, err ResponseError) error {
 	return err
 }
 
+// shopee error maybe return status=200
+// eg. {"error":"error_incalid_category.","message":"Invalid category ID","request_id":"2069449bd255af166cb52b0e15189d6d"}
+// {"error":"error_category_is_block.","message":"Category is restricted","request_id":"97994a47af37a22da79cb910bfd9841a"}
 func CheckResponseError(r *http.Response) error {
-	if http.StatusOK <= r.StatusCode && r.StatusCode < http.StatusMultipleChoices {
-		return nil
-	}
-
 	shopeeError:=struct {
 		Error string `json:"error"`
 		Message string `json:"message"`
@@ -431,6 +430,10 @@ func CheckResponseError(r *http.Response) error {
 				Status:  r.StatusCode,
 			}
 		}
+	}
+
+	if shopeeError.Error == "" && http.StatusOK <= r.StatusCode && r.StatusCode < http.StatusMultipleChoices {
+		return nil
 	}
 
 	responseError := ResponseError{
