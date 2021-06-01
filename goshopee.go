@@ -343,12 +343,10 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}) (http.Header, er
 	defer resp.Body.Close()
 
 	if v != nil {
-		content, err := ioutil.ReadAll(resp.Body)
+		decoder := json.NewDecoder(resp.Body)
+		err := decoder.Decode(&v)
 		if err != nil {
-			return nil, fmt.Errorf("fetch response body error: %s", err)
-		}
-		if err := json.Unmarshal(content, &v); err != nil {
-			return nil, fmt.Errorf("decode resp error: %s", err)
+			return nil, err
 		}
 	}
 
@@ -420,6 +418,11 @@ func CheckResponseError(r *http.Response) error {
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		// already read out, reload for next process
+		r.Body=ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+	}()
 
 	if len(bodyBytes) > 0 {
 		err := json.Unmarshal(bodyBytes, &shopeeError)
