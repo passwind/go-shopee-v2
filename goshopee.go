@@ -15,6 +15,7 @@ import (
 	"net/url"
 	"path"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -283,25 +284,17 @@ func (c *Client) makeSignature(req *http.Request, paramStr string) (string,int64
 }
 
 // doGetHeaders executes a request, decoding the response into `v` and also returns any response headers.
-func (c *Client) doGetHeaders(req *http.Request, v interface{}) (h http.Header, err error) {
+func (c *Client) doGetHeaders(req *http.Request, v interface{}) (http.Header, error) {
 	var resp *http.Response
+	var err error
 
-	defer func() {
-		if resp!=nil && resp.Body!=nil {
-			if content, _ := ioutil.ReadAll(resp.Body); content != nil {
-				if err1 := c.checkShopeeError(resp, content); err1 != nil {
-					err=err1
-				}				
-			}
-		}
-	}()
-	
 	retries := c.retries
 	c.attempts = 0
 	c.logRequest(req)
 
 	for {
 		c.attempts++
+
 		resp, err = c.Client.Do(req)
 		c.logResponse(resp)
 		if err != nil {
@@ -354,34 +347,12 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}) (h http.Header, 
 		if err != nil {
 			return nil, fmt.Errorf("fetch response body error: %s", err)
 		}
-		if err := c.checkShopeeError(resp, content); err != nil {
-			return nil, err
-		}
 		if err := json.Unmarshal(content, &v); err != nil {
 			return nil, fmt.Errorf("decode resp error: %s", err)
 		}
 	}
 
 	return resp.Header, nil
-}
-
-// checkShopeeError shopee returned an error with 200 body
-// we'll handle that error in wrapSpecificError()
-// 200 %!d(string=200 OK)
-func (c *Client) checkShopeeError(r *http.Response, bodyBytes []byte) error {
-	if len(bodyBytes) > 0 {
-		var serr Error
-		if err:=json.Unmarshal(bodyBytes,&serr);err!=nil {
-			// TODO: unknown err?
-			return nil
-		}
-
-		if serr.Error!="" {
-			return fmt.Errorf("shopee_error: %s [%s]",serr.Error,serr.Message)
-		}
-	}
-
-	return nil
 }
 
 func (c *Client) logRequest(req *http.Request) {
@@ -414,6 +385,15 @@ func (c *Client) logBody(body *io.ReadCloser, format string) {
 }
 
 func wrapSpecificError(r *http.Response, err ResponseError) error {
+	// TODO: check rate-limit error for shopee
+	if err.Status == http.StatusTooManyRequests {
+		f, _ := strconv.ParseFloat(r.Header.Get("Retry-After"), 64)
+		return RateLimitError{
+			ResponseError: err,
+			RetryAfter:    int(f),
+		}
+	}
+	
 	// if err.Status == http.StatusSeeOther {
 	// todo
 	// The response to the request can be found under a different URL in the
@@ -432,9 +412,30 @@ func CheckResponseError(r *http.Response) error {
 		return nil
 	}
 
+	shopeeError:=struct {
+		Error string `json:"error"`
+		Message string `json:"message"`
+	}{}
+
+	bodyBytes, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		return err
+	}
+
+	if len(bodyBytes) > 0 {
+		err := json.Unmarshal(bodyBytes, &shopeeError)
+		if err != nil {
+			return ResponseDecodingError{
+				Body:    bodyBytes,
+				Message: err.Error(),
+				Status:  r.StatusCode,
+			}
+		}
+	}
+
 	responseError := ResponseError{
 		Status:  r.StatusCode,
-		Message: r.Status,
+		Message: fmt.Sprintf("shopee-%s [%s]",shopeeError.Error,shopeeError.Message),
 	}
 
 	return wrapSpecificError(r, responseError)
