@@ -436,3 +436,26 @@ func Test_GetItemPromotion(t *testing.T) {
 		t.Errorf("PromotionPrice returned %+v, expected %+v",res.Response.SuccessList[0].Promotion[0].PromotionPriceInfo[0].PromotionPrice , expected)
 	}
 }
+
+func Test_UpdateTierVariation(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/product/update_tier_variation",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("response.json")))
+
+	var req UpdateTierVariationRequest
+	loadMockData("update_tier_variation_req.json",&req)
+
+	res,err:=client.Product.UpdateTierVariation(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Product.UpdateTierVariation error: %s",err)
+	}
+
+	t.Logf("Product.UpdateTierVariation: %#v",res)
+
+	var expected string = "f634ea27eff8461b8f6f9ffa1d7ddab2"
+	if res.RequestID != expected {
+		t.Errorf("RequestID returned %+v, expected %+v",res.RequestID , expected)
+	}
+}

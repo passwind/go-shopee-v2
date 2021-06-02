@@ -13,6 +13,7 @@ type ProductService interface {
 	UpdateItem(uint64, UpdateItemRequest, string) (*UpdateItemResponse, error)
 	UnlistItem(uint64, UnlistItemRequest, string) (*UnlistItemResponse, error)
 	InitTierVariation(uint64, InitTierVariationRequest, string) (*InitTierVariationResponse,error)
+	UpdateTierVariation(uint64, UpdateTierVariationRequest, string)(*UpdateTierVariationResponse,error)
 	GetModelList(uint64, uint64, string) (*GetModelListResponse, error)
 	AddModel(uint64, AddModelRequest, string)(*AddModelResponse, error)
 	DeleteModel(uint64, uint64, uint64, string) (*BaseResponse, error)
@@ -814,5 +815,25 @@ func (s *ProductServiceOp)GetItemPromotion(sid uint64, itemIDs []uint64, tok str
 
 	resp := new(GetItemPromotionResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
+	return resp, err
+}
+
+type UpdateTierVariationRequest struct {
+	ItemID uint64 `json:"item_id"`
+	TierVariation []TierVariation `json:"tier_variation"`
+}
+
+type UpdateTierVariationResponse struct {
+	BaseResponse
+}
+
+func (s *ProductServiceOp)UpdateTierVariation(sid uint64, data UpdateTierVariationRequest, tok string)(*UpdateTierVariationResponse,error){
+	path := "/product/update_tier_variation"
+	resp := new(UpdateTierVariationResponse)
+	req,err:=StructToMap(data)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
 	return resp, err
 }
