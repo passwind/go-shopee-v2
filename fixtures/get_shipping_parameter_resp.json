@@ -1,0 +1,47 @@
+{
+  "error": "",
+  "message": "",
+  "response": {
+    "info_needed": {
+      "dropoff": [],
+      "pickup": [
+        "address_id",
+        "pickup_time_id"
+      ]
+    },
+    "dropoff": null,
+    "pickup": {
+      "address_list": [
+        {
+          "address_id": 123,
+          "region": "SG",
+          "state": "",
+          "city": "",
+          "district": "",
+          "town": "",
+          "address": "",
+          "zipcode": "40009",
+          "address_flag": [
+            "default_address",
+            "pickup_address",
+            "return_address"
+          ],
+          "time_slot_list": null
+        },
+        {
+          "address_id": 234,
+          "region": "SG",
+          "state": "",
+          "city": "",
+          "district": "",
+          "town": "",
+          "address": "hhh, #34",
+          "zipcode": "xxx",
+          "address_flag": [],
+          "time_slot_list": null
+        }
+      ]
+    }
+  },
+  "request_id": "2880a5a28510424eaa3288fd941fae2c"
+}

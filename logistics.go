@@ -2,6 +2,7 @@ package goshopee
 
 type LogisticsService interface {
 	GetChannelList(uint64, string) (*GetChannelListResponse, error)
+	GetShippingParameter(uint64, string,string) (*GetShippingParameterResponse, error)
 }
 
 type LogisticsServiceOp struct{
@@ -63,5 +64,76 @@ func (s *LogisticsServiceOp)GetChannelList(sid uint64, tok string) (*GetChannelL
 
 	resp := new(GetChannelListResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, nil)
+	return resp, err
+}
+
+type GetShippingParameterRequest struct {
+	OrderSN string `url:"order_sn"`
+}
+
+type GetShippingParameterResponse struct {
+	BaseResponse
+
+	Response GetShippingParameterResponseData `json:"response"`
+}
+
+type GetShippingParameterResponseData struct {
+	InfoNeeded GetShippingParameterResponseDataInfo `json:"info_needed"`
+	Dropoff Dropoff `json:"dropoff"`
+	Pickup Pickup `json:"pickup"`
+}
+
+type Pickup struct {
+	AddressList []LogisticsAddress `json:"address_list"`
+}
+
+type LogisticsAddress struct {
+	AddressID uint64 `json:"address_id"`
+	Region string `json:"region"`
+	State string `json:"state"`
+	City string `json:"city"`
+	Address string `json:"address"`
+	Zipcode string `json:"zipcode"`
+	District string `json:"district"`
+	Town string `json:"town"`
+	AddressFlag []string `json:"address_flag"`
+	TimeSlotList []TimeSlot `json:"time_slot_list"`
+}
+
+type TimeSlot struct {
+	Date int64 `json:"date"`
+	TimeText string `json:"time_text"`
+	PickupTimeID string `json:"pickup_time_id"`
+}
+
+type Dropoff struct {
+	BranchList []Branch `json:"branch_list"`
+}
+
+type Branch struct {
+	BranchID uint64 `json:"branch_id"`
+	Region string `json:"region"`
+	State string `json:"state"`
+	City string `json:"city"`
+	Address string `json:"address"`
+	Zipcode string `json:"zipcode"`
+	District string `json:"district"`
+	Town string `json:"town"`
+}
+
+type GetShippingParameterResponseDataInfo struct {
+	Dropoff []string `json:"dropoff"`
+	Pickup []string `json:"pickup"`
+	NonIntegrated []string `json:"non_integrated"`
+}
+
+func (s *LogisticsServiceOp)GetShippingParameter(sid uint64, ordersn, tok string) (*GetShippingParameterResponse, error){
+	path := "/logistics/get_shipping_parameter"
+	opt:=GetShippingParameterRequest{
+		OrderSN: ordersn,
+	}
+
+	resp := new(GetShippingParameterResponse)
+	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
 	return resp, err
 }

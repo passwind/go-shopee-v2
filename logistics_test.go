@@ -29,3 +29,26 @@ func Test_GetChannelList(t *testing.T) {
 		t.Errorf("LogisticsChannelList[4].LogisticsChannelID returned %+v, expected %+v",res.Response.LogisticsChannelList[4].LogisticsChannelID , expectedID)
 	}
 }
+
+func Test_GetShippingParameter(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/logistics/get_shipping_parameter",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("get_shipping_parameter_resp.json")))
+
+	res,err:=client.Logistics.GetShippingParameter(shopID,"SN123",accessToken)
+	if err!=nil {
+		t.Errorf("Logistics.GetShippingParameter error: %s",err)
+	}
+
+	t.Logf("Logistics.GetShippingParameter: %#v",res)
+
+	if len(res.Response.InfoNeeded.Pickup)!=2 {
+		t.Errorf("LogisticsChannelList len return %v, expected 2",len(res.Response.InfoNeeded.Pickup))
+	}
+	var expected string = "hhh, #34"
+	if res.Response.Pickup.AddressList[1].Address != expected {
+		t.Errorf("Pickup.AddressList[1].Address returned %+v, expected %+v",res.Response.Pickup.AddressList[1].Address , expected)
+	}
+}

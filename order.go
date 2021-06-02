@@ -43,7 +43,7 @@ type Order struct {
 	ShipByDate int `json:"ship_by_date"`
 	BuyerUserID uint64 `json:"buyer_user_id"`
 	BuyerUsername string `json:"buyer_username"`
-	RecipientAddress Address `json:"recipient_address"`
+	RecipientAddress OrderAddress `json:"recipient_address"`
 	ActualShippingFee float64 `json:"actual_shipping_fee"`
 	GoodsToDeclare bool `json:"goods_to_declare"`
 	Note string `json:"note"`
@@ -107,7 +107,7 @@ type OrderItem struct {
 	PromotionID uint64 `json:"promotion_id"`
 }
 
-type Address struct {
+type OrderAddress struct {
 	Name string `json:"name"`
 	Phone string `json:"phone"`
 	Town string `json:"town"`
