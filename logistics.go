@@ -3,6 +3,7 @@ package goshopee
 type LogisticsService interface {
 	GetChannelList(uint64, string) (*GetChannelListResponse, error)
 	GetShippingParameter(uint64, string,string) (*GetShippingParameterResponse, error)
+	ShipOrder(uint64, ShipOrderRequest, string) (*ShipOrderResponse, error)
 }
 
 type LogisticsServiceOp struct{
@@ -135,5 +136,44 @@ func (s *LogisticsServiceOp)GetShippingParameter(sid uint64, ordersn, tok string
 
 	resp := new(GetShippingParameterResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
+	return resp, err
+}
+
+type ShipOrderRequest struct {
+	OrderSN string `json:"order_sn"`
+	PackageNumber string `json:"package_number"`
+	Pickup *ShipOrderRequestPickup `json:"pickup,omitempty"`
+	Dropoff *ShipOrderRequestDropoff `json:"dropoff,omitempty"`
+	NonIntegrated *ShipOrderRequestNonIntegrated `json:"non_integrated,omitempty"`
+}
+
+type ShipOrderRequestNonIntegrated struct {
+	TrackingNumber string `json:"tracking_number"`
+}
+
+type ShipOrderRequestDropoff struct {
+	BranchID uint64 `json:"branch_id"`
+	SenderRealName string `json:"sender_real_name"`
+	TrackingNumber string `json:"tracking_number"`
+}
+
+type ShipOrderRequestPickup struct {
+	AddressID uint64 `json:"address_id"`
+	PickupTimeID string `json:"pickup_time_id"`
+	TrackingNumber string `json:"tracking_number"`
+}
+
+type ShipOrderResponse struct {
+	BaseResponse
+}
+
+func (s *LogisticsServiceOp)ShipOrder(sid uint64, data ShipOrderRequest, tok string)(*ShipOrderResponse,error){
+	path := "/logistics/ship_order"
+	resp := new(ShipOrderResponse)
+	req,err:=StructToMap(data)
+	if err!=nil {
+		return nil,err
+	}
+	err = s.client.WithShop(sid,tok).Post(path, req, resp)
 	return resp, err
 }

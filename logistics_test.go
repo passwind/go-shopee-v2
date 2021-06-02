@@ -52,3 +52,26 @@ func Test_GetShippingParameter(t *testing.T) {
 		t.Errorf("Pickup.AddressList[1].Address returned %+v, expected %+v",res.Response.Pickup.AddressList[1].Address , expected)
 	}
 }
+
+func Test_ShipOrder(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("POST", fmt.Sprintf("%s/api/v2/logistics/ship_order",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("response.json")))
+
+	var req ShipOrderRequest
+	loadMockData("ship_order_req.json",&req)
+	
+	res,err:=client.Logistics.ShipOrder(shopID,req,accessToken)
+	if err!=nil {
+		t.Errorf("Logistics.ShipOrder error: %s",err)
+	}
+
+	t.Logf("Logistics.ShipOrder: %#v",res)
+
+	var expected string = "f634ea27eff8461b8f6f9ffa1d7ddab2"
+	if res.RequestID != expected {
+		t.Errorf("RequestID returned %+v, expected %+v",res.RequestID , expected)
+	}
+}
