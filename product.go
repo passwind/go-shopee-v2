@@ -20,6 +20,7 @@ type ProductService interface {
 	UpdatePrice(uint64, UpdatePriceRequest, string) (*UpdatePriceResponse, error)
 	UpdateStock(uint64, UpdateStockRequest, string) (*UpdateStockResponse, error)
 	CategoryRecommend(uint64, string, string) (*CategoryRecommendResponse, error)
+	GetItemPromotion(uint64, []uint64, string) (*GetItemPromotionResponse, error)
 }
 
 type GetCategoryResponse struct {
@@ -761,6 +762,57 @@ func (s *ProductServiceOp)	CategoryRecommend(sid uint64, itemName, tok string) (
 	}
 
 	resp := new(CategoryRecommendResponse)
+	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
+	return resp, err
+}
+
+type GetItemPromotionRequest struct {
+	ItemIDList []uint64 `url:"item_id_list"`
+}
+type GetItemPromotionResponse struct {
+	BaseResponse
+
+	Response GetItemPromotionResponseData `json:"response"`
+}
+
+type GetItemPromotionResponseData struct {
+	SuccessList []ItemPromotion `json:"success_list"`
+}
+
+type ItemPromotion struct {
+	ItemID uint64 `json:"item_id"`
+	Promotion []Promotion `json:"promotion"`
+}
+
+type Promotion struct {
+	PromotionType string `json:"promotion_type"`
+	PromotionID uint64 `json:"promotion_id"`
+	ModelID uint64 `json:"model_id"`
+	StartTime int64 `json:"start_time"`
+	EndTime int64 `json:"end_time"`
+	PromotionPriceInfo []PromotionPriceInfo `json:"promotion_price_info"`
+	ReservedStockInfo []ReservedStockInfo `json:"reserved_stock_info"`
+	PromotionStaging string `json:"promotion_staging"`
+}
+
+type PromotionPriceInfo struct {
+	PromotionPrice float64 `json:"promotion_price"`
+}
+
+type ReservedStockInfo struct {
+	StockType int `json:"stock_type"`
+	StockLocationID string `json:"stock_location_id"`
+	ReservedStock int `json:"reserved_stock"`
+}
+
+func (s *ProductServiceOp)GetItemPromotion(sid uint64, itemIDs []uint64, tok string) (*GetItemPromotionResponse, error){
+	path := "/product/get_item_promotion"
+
+	opt:=GetItemPromotionRequest{
+		ItemIDList: itemIDs,
+	}
+
+	resp := new(GetItemPromotionResponse)
 	err := s.client.WithShop(sid,tok).Get(path, resp, opt)
 	return resp, err
 }

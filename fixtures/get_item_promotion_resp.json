@@ -1,0 +1,41 @@
+{
+  "error": "",
+  "message": "",
+  "warning": "",
+  "request_id": "xxxxx",
+  "response": {
+    "success_list": [
+      {
+        "item_id": 234,
+        "promotion": [
+          {
+            "promotion_type": "Flash Sale",
+            "promotion_id": 123,
+            "model_id": 1000,
+            "start_time": 123455,
+            "end_time": 23456,
+            "promotion_price_info": [
+              {
+                "promotion_price": 12.12
+              }
+            ],
+            "reserved_stock_info": [
+              {
+                "stock_type": 1,
+                "stock_location_id": "xxxxx",
+                "reserved_stock": 10
+              }
+            ],
+            "promotion_staging": "incoming"
+          }
+        ]
+      }
+    ],
+    "failure_list": [
+      {
+        "item_id": 123,
+        "failed_reason": "xxxx"
+      }
+    ]
+  }
+}

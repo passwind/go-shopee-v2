@@ -416,3 +416,23 @@ func Test_CategoryRecommend(t *testing.T) {
 		t.Errorf("CategoryID returned %+v, expected %+v",res.Response.CategoryID[0] , expectedID)
 	}
 }
+
+func Test_GetItemPromotion(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/get_item_promotion",app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("get_item_promotion_resp.json")))
+
+	res,err:=client.Product.GetItemPromotion(shopID,[]uint64{123},accessToken)
+	if err!=nil {
+		t.Errorf("Product.GetItemPromotion error: %s",err)
+	}
+
+	t.Logf("Product.GetItemPromotion: %#v",res)
+
+	var expected float64 = 12.12
+	if res.Response.SuccessList[0].Promotion[0].PromotionPriceInfo[0].PromotionPrice != expected {
+		t.Errorf("PromotionPrice returned %+v, expected %+v",res.Response.SuccessList[0].Promotion[0].PromotionPriceInfo[0].PromotionPrice , expected)
+	}
+}
