@@ -72,6 +72,7 @@ type Client struct {
 	Logistics LogisticsService
 	Shop ShopService
 	Discount DiscountService
+	Order OrderService
 }
 
 // NewClient returns a new Shopify API client with an already authenticated shopname and
@@ -98,6 +99,7 @@ func NewClient(app App, opts ...Option) *Client {
 	c.Logistics=&LogisticsServiceOp{client: c}
 	c.Shop=&ShopServiceOp{client: c}
 	c.Discount=&DiscountServiceOp{client: c}
+	c.Order=&OrderServiceOp{client: c}
 	
 	// apply any options
 	for _, opt := range opts {

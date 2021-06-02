@@ -1,0 +1,87 @@
+{
+  "error": "",
+  "message": "",
+  "response": {
+    "order_list": [
+      {
+        "actual_shipping_fee": 0,
+        "actual_shipping_fee_confirmed": false,
+        "buyer_cancel_reason": "",
+        "buyer_cpf_id": null,
+        "buyer_user_id": 9193214,
+        "buyer_username": "local_apitest.my",
+        "cancel_by": "system",
+        "cancel_reason": "BACKEND_LOGISTICS_NOT_STARTED",
+        "cod": false,
+        "create_time": 1607930885,
+        "credit_card_number": "",
+        "currency": "MYR",
+        "days_to_ship": 2,
+        "dropshipper": "",
+        "dropshipper_phone": "",
+        "estimated_shipping_fee": 4,
+        "fulfillment_flag": null,
+        "goods_to_declare": false,
+        "item_list": [
+          {
+            "item_id": 2600144043,
+            "item_name": "backpack",
+            "item_sku": "sku",
+            "model_id": 0,
+            "model_name": "",
+            "model_sku": "",
+            "model_quantity_purchased": 1,
+            "model_original_price": 1000,
+            "model_discounted_price": 1000,
+            "wholesale": false,
+            "weight": 1,
+            "add_on_deal": false,
+            "main_item": false,
+            "add_on_deal_id": 0,
+            "promotion_type": "",
+            "promotion_id": 0
+          }
+        ],
+        "message_to_seller": "",
+        "note": "",
+        "note_update_time": 0,
+        "order_sn": "201214JASXYXY6",
+        "order_status": "CANCELLED",
+        "package_list": [
+          {
+            "package_number": "61630084074470",
+            "logistics_status": "LOGISTICS_INVALID",
+            "shipping_carrier": "Standard Delivery",
+            "item_list": [
+              {
+                "item_id": 2600144043,
+                "model_id": 0
+              }
+            ]
+          }
+        ],
+        "pay_time": 1607930885,
+        "payment_method": "Bank Transfer",
+        "pickup_done_time": 0,
+        "recipient_address": {
+          "name": "",
+          "phone": "60107777779",
+          "town": "",
+          "district": "",
+          "city": "Asajaya",
+          "state": "Sarawak",
+          "region": "MY",
+          "zipcode": "40009",
+          "full_address": ""
+        },
+        "region": "MY",
+        "ship_by_date": 1608103685,
+        "shipping_carrier": "Standard Delivery",
+        "split_up": false,
+        "total_amount": 1004,
+        "update_time": 1608134691
+      }
+    ]
+  },
+  "request_id": "a8e1b94f51d64540bf5762abe7783073"
+}
