@@ -461,7 +461,7 @@ type AddModelRequestModel struct {
 	TierIndex []int `json:"tier_index"` // TODO: doc error?
 	NormalStock int `json:"normal_stock"`
 	OriginalPrice float64 `json:"original_price"`
-	ModelSku string `json:"model_sku"`
+	ModelSKU string `json:"model_sku"`
 }
 
 type AddModelResponse struct {
