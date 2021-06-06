@@ -2,7 +2,7 @@
   "error": "",
   "message": "",
   "response": {
-    "logistics": [
+    "logistics_channel_list": [
       {
         "logistics_channel_id": 123456,
         "logistics_channel_name": "Test channel name",

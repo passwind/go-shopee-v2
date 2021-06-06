@@ -18,15 +18,11 @@ type GetChannelListResponse struct {
 }
 
 type GetChannelListResponseData struct {
-	LogisticsChannelList []LogisticsChannel `json:"logistics"` // TODO: or logistics_channel_list ?
-	LogisticsDescription string `json:"logistics_description"`
-	ForceEnabled bool `json:"force_enabled"`
-	MaskChannelID uint64 `json:"mask_channel_id"`
+	LogisticsChannelList []LogisticsChannel `json:"logistics_channel_list"` // TODO: infact is logistics_channel_list ?
 }
 
 type LogisticsChannel struct {
 	LogisticsChannelID uint64 `json:"logistics_channel_id"`
-	Preferred bool `json:"preferred"`
 	LogisticsChannelName string `json:"logistics_channel_name"`
 	CODEnabled bool `json:"cod_enabled"`
 	Enabled bool `json:"enabled"`
@@ -34,6 +30,10 @@ type LogisticsChannel struct {
 	SizeList []Size `json:"size_list"`
 	WeightLimit WeightLimit `json:"weight_limit"`
 	ItemMaxDimension ItemMaxDimension `json:"item_max_dimension"`
+	Preferred bool `json:"preferred"`
+	ForceEnabled bool `json:"force_enabled"` // TODO: infact in list
+	MaskChannelID uint64 `json:"mask_channel_id"` // TODO: infact no?
+	LogisticsDescription string `json:"logistics_description"` // TODO: infact no?
 	VolumeLimit VolumeLimit `json:"volume_limit"`
 }
 
