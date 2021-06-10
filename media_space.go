@@ -1,14 +1,5 @@
 package goshopee
 
-import (
-	"bytes"
-	"fmt"
-	"io"
-	"mime/multipart"
-	"os"
-	"path/filepath"
-)
-
 //
 type MediaSpaceService interface {
 	UploadImage(string) (*UploadImageResponse,error)
@@ -41,30 +32,8 @@ type MediaSpaceServiceOp struct {
 
 func (s *MediaSpaceServiceOp)UploadImage(filename string) (*UploadImageResponse,error){
 	path := "/media_space/upload_image"
-
-
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, fmt.Errorf("open file error: %s [%s]",err,path)
-	}
-	defer file.Close()
-
-	filebody := &bytes.Buffer{}
-	writer := multipart.NewWriter(filebody)
-	defer writer.Close()
-
-	part, err := writer.CreateFormFile("image", filepath.Base(path))
-	if err != nil {
-		return nil, fmt.Errorf("prepare upload error: %s",err)
-	}
-	if _, err = io.Copy(part, file);err!=nil {
-		return nil, fmt.Errorf("prepare upload 1 error: %s",err)
-	}
 	
 	resp := new(UploadImageResponse)
-	headers:=map[string]string{
-		"Content-Type": writer.FormDataContentType(),
-	}
-	err = s.client.Upload(path, filebody, headers, resp)
+	err := s.client.Upload(path, "image", filename, resp)
 	return resp, err
 }

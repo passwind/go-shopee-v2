@@ -19,7 +19,7 @@ func Test_UploadImage(t *testing.T) {
 		t.Errorf("Media.UploadImage error: %s",err)
 	}
 
-	t.Logf("return tok: %#v",res)
+	t.Logf("return image: %#v",res)
 
 	var expectedID string = "e721546cbfafcb14ac6ae6c7cf57e455"
 	if res.Response.ImageInfo.ImageID != expectedID {

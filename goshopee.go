@@ -11,9 +11,12 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
+	"path/filepath"
 	"sort"
 	"strconv"
 	"strings"
@@ -179,16 +182,6 @@ func (c *Client) NewRequest(method, relPath string, body, options, headers inter
 	// Make the full url based on the relative path
 	u := c.baseURL.ResolveReference(rel)
 
-	contentType:="application/json"
-	var headerOptions map[string]string
-
-	if headers!=nil {
-		headerOptions=headers.(map[string]string)
-		if v,ok:=headerOptions["Content-Type"];ok{
-			contentType=v
-		}
-	}
-
 	// Add custom options
 	if options != nil {
 		optionsQuery, err := query.Values(options)
@@ -205,33 +198,24 @@ func (c *Client) NewRequest(method, relPath string, body, options, headers inter
 	}
 
 	// A bit of JSON ceremony
-	var bodyReader io.Reader
-	var signBody string
+	var js []byte = nil
 	if body != nil {
-		if contentType=="application/json" {
-			var js []byte = nil
-			js, err = json.Marshal(body)
-			if err != nil {
-				return nil, err
-			}
-			bodyReader=bytes.NewBuffer(js)
-
-			// signBody=string(js)
-		} else {			
-			bodyReader=body.(io.Reader)
+		js, err = json.Marshal(body)
+		if err != nil {
+			return nil, err
 		}
 	}
 
-	req, err := http.NewRequest(method, u.String(), bodyReader)
+	req, err := http.NewRequest(method, u.String(), bytes.NewBuffer(js))
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", contentType)
+	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("User-Agent", UserAgent)
 
-	c.makeSignature(req, signBody)
+	c.makeSignature(req)
 
 	return req, nil
 }
@@ -249,7 +233,7 @@ func (c *Client)WithMerchant(aid uint64, tok string) *Client {
 }
 
 // https://open.shopee.com/documents?module=87&type=2&id=58&version=2
-func (c *Client) makeSignature(req *http.Request, paramStr string) (string,int64) {
+func (c *Client) makeSignature(req *http.Request) (string,int64) {
 	ts:=time.Now().Unix()
 	path:=req.URL.Path
 
@@ -288,7 +272,7 @@ func (c *Client) makeSignature(req *http.Request, paramStr string) (string,int64
 }
 
 // doGetHeaders executes a request, decoding the response into `v` and also returns any response headers.
-func (c *Client) doGetHeaders(req *http.Request, v interface{}) (http.Header, error) {
+func (c *Client) doGetHeaders(req *http.Request, v interface{}, skipBody bool) (http.Header, error) {
 	var resp *http.Response
 	var err error
 
@@ -300,7 +284,7 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}) (http.Header, er
 		c.attempts++
 
 		resp, err = c.Client.Do(req)
-		c.logResponse(resp)
+		c.logResponse(resp, skipBody)
 		if err != nil {
 			return nil, err //http client errors, not api responses
 		}
@@ -343,7 +327,7 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}) (http.Header, er
 		return nil, respErr
 	}
 
-	c.logResponse(resp)
+	c.logResponse(resp, skipBody)
 	defer resp.Body.Close()
 
 	if v != nil {
@@ -367,12 +351,15 @@ func (c *Client) logRequest(req *http.Request) {
 	c.logBody(&req.Body, "SENT: %s")
 }
 
-func (c *Client) logResponse(res *http.Response) {
+// skipBody: if upload image, skip log its binary
+func (c *Client) logResponse(res *http.Response, skipBody bool) {
 	if res == nil {
 		return
 	}
 	c.log.Debugf("RECV %d: %s", res.StatusCode, res.Status)
-	c.logBody(&res.Body, "RESP: %s")
+	if !skipBody {
+		c.logBody(&res.Body, "RESP: %s")
+	}
 }
 
 func (c *Client) logBody(body *io.ReadCloser, format string) {
@@ -484,23 +471,10 @@ func (c *Client) createAndDoGetHeaders(method, relPath string, data, options, he
 
 	relPath = path.Join("api/v2", relPath)
 
-	contentType:="application/json"
-	var headerOptions map[string]string
-
-	if headers!=nil {
-		headerOptions=headers.(map[string]string)
-		if v,ok:=headerOptions["Content-Type"];ok{
-			contentType=v
-		}
-	}
-
-	if contentType=="application/json" {
-		if data != nil {
-			params := data.(map[string]interface{})
-			params["partner_id"] = c.app.PartnerID
-			// params["timestamp"] = time.Now().Unix()
-			data=params
-		}
+	if data != nil {
+		params := data.(map[string]interface{})
+		params["partner_id"] = c.app.PartnerID
+		data=params
 	}
 
 	req, err := c.NewRequest(method, relPath, data, options, headers)
@@ -508,7 +482,7 @@ func (c *Client) createAndDoGetHeaders(method, relPath string, data, options, he
 		return nil, err
 	}
 
-	return c.doGetHeaders(req, resource)
+	return c.doGetHeaders(req, resource, false)
 }
 
 // Get performs a GET request for the given path and saves the result in the
@@ -536,7 +510,69 @@ func (c *Client) Delete(path string) error {
 
 // Upload performs a Upload request for the given path and saves the result in the
 // given resource.
-func (c *Client) Upload(path string, data, headers, resource interface{}) error {
-	return c.CreateAndDo("POST", path, data, nil, headers, resource)
+func (c *Client) Upload(relPath, fieldname, filename string, resource interface{}) error {
+	req, err := c.NewfileUploadRequest(relPath, fieldname, filename)
+	if err != nil {
+		return err
+	}
+
+	if _, err:=c.doGetHeaders(req, resource, true);err!=nil {
+		return err
+	}
+	return nil
+}
+
+// Creates a new file upload http request with optional extra params
+func (c *Client) NewfileUploadRequest(relPath, paramName, filename string) (*http.Request, error) {
+	if strings.HasPrefix(relPath, "/") {
+		// make sure it's a relative path
+		relPath = strings.TrimLeft(relPath, "/")
+	}
+
+	relPath = path.Join("api/v2", relPath)
+
+	rel, err := url.Parse(relPath)
+	if err != nil {
+		return nil, err
+	}
+
+	// Make the full url based on the relative path
+	u := c.baseURL.ResolveReference(rel)
+	uri:=u.String()
+
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+
+	part, err := writer.CreateFormFile(paramName, filepath.Base(filename))
+	if err != nil {
+		return nil, err
+	}
+	if _, err = io.Copy(part, file);err!=nil {
+		return nil,err
+	}
+
+	err = writer.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	req,err:= http.NewRequest("POST", uri, body)
+	if err!=nil {
+		return nil, err
+	}
+
+	req.Header.Set("Content-Type", writer.FormDataContentType())
+	req.Header.Add("Accept", "application/json")
+	req.Header.Add("User-Agent", UserAgent)
+
+	c.makeSignature(req)
+
+	return req, nil
 }
 
