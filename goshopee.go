@@ -278,13 +278,13 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}, skipBody bool) (
 
 	retries := c.retries
 	c.attempts = 0
-	c.logRequest(req)
+	c.logRequest(req, skipBody)
 
 	for {
 		c.attempts++
 
 		resp, err = c.Client.Do(req)
-		c.logResponse(resp, skipBody)
+		c.logResponse(resp)
 		if err != nil {
 			return nil, err //http client errors, not api responses
 		}
@@ -327,7 +327,7 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}, skipBody bool) (
 		return nil, respErr
 	}
 
-	c.logResponse(resp, skipBody)
+	c.logResponse(resp)
 	defer resp.Body.Close()
 
 	if v != nil {
@@ -341,25 +341,25 @@ func (c *Client) doGetHeaders(req *http.Request, v interface{}, skipBody bool) (
 	return resp.Header, nil
 }
 
-func (c *Client) logRequest(req *http.Request) {
+// skipBody: if upload image, skip log its binary
+func (c *Client) logRequest(req *http.Request, skipBody bool) {
 	if req == nil {
 		return
 	}
 	if req.URL != nil {
 		c.log.Debugf("%s: %s", req.Method, req.URL.String())
 	}
-	c.logBody(&req.Body, "SENT: %s")
+	if !skipBody {
+		c.logBody(&req.Body, "SENT: %s")
+	}
 }
 
-// skipBody: if upload image, skip log its binary
-func (c *Client) logResponse(res *http.Response, skipBody bool) {
+func (c *Client) logResponse(res *http.Response) {
 	if res == nil {
 		return
 	}
 	c.log.Debugf("RECV %d: %s", res.StatusCode, res.Status)
-	if !skipBody {
-		c.logBody(&res.Body, "RESP: %s")
-	}
+	c.logBody(&res.Body, "RESP: %s")
 }
 
 func (c *Client) logBody(body *io.ReadCloser, format string) {

@@ -254,7 +254,7 @@ type ItemBase struct {
 	AttributeList []ItemAttribute `json:"attribute_list"`
 	Image ItemImage `json:"image"`
 	Weight float64 `json:"weight"` // int or float? sample is "1.000"? or string? https://open.shopee.com/documents?module=89&type=1&id=616&version=2
-	Dimension Dimension `json:"dimension"`
+	Dimension *Dimension `json:"dimension,omitempty"`
 	LogisticInfo []LogisticInfo `json:"logistic_info"`
 	PreOrder ItemPreOrder `json:"pre_order"`
 	Wholesale []ItemWholesale `json:"wholesale"`
@@ -372,7 +372,7 @@ type TierVariation struct {
 
 type TierVariationOption struct {
 	Option string `json:"option"`
-	Image TierVariationOptionImage `json:"image"`
+	Image *TierVariationOptionImage `json:"image,omitempty"`
 }
 
 type TierVariationOptionImage struct {
