@@ -401,7 +401,7 @@ func Test_CategoryRecommend(t *testing.T) {
 	setup()
 	defer teardown()
 
-	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/category_recommand",app.APIURL),
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/product/category_recommend",app.APIURL),
 		httpmock.NewBytesResponder(200, loadFixture("category_recommend_resp.json")))
 
 	res,err:=client.Product.CategoryRecommend(shopID,"test",accessToken)
