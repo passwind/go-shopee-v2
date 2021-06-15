@@ -461,7 +461,7 @@ type AddModelRequestModel struct {
 	TierIndex []int `json:"tier_index"` // TODO: doc error?
 	NormalStock int `json:"normal_stock"`
 	OriginalPrice float64 `json:"original_price"`
-	ModelSKU string `json:"model_sku"`
+	ModelSku string `json:"model_sku"`
 }
 
 type AddModelResponse struct {
@@ -741,7 +741,7 @@ func (s *ProductServiceOp)UpdateStock(sid uint64, data UpdateStockRequest, tok s
 }
 
 type CategoryRecommendRequest struct {
-	ItemName string `json:"item_name"`
+	ItemName string `url:"item_name"`
 }
 
 type CategoryRecommendResponse struct {
@@ -756,7 +756,7 @@ type CategoryRecommendResponseData struct {
 
 // https://open.shopee.com/documents?module=89&type=1&id=702&version=2
 func (s *ProductServiceOp)	CategoryRecommend(sid uint64, itemName, tok string) (*CategoryRecommendResponse,error){
-	path := "/product/category_recommand" // TODO: recommand or recommend?
+	path := "/product/category_recommend" // Infact is recommend
 
 	opt:=CategoryRecommendRequest{
 		ItemName: itemName,
