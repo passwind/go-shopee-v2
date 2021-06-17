@@ -309,7 +309,7 @@ type ItemImage struct {
 
 type ItemPreOrder struct {
 	IsPreOrder bool `json:"is_pre_order"`
-	DaysToShip int `json:"days_to_ship"`
+	DaysToShip *int `json:"days_to_ship,omitempty"` // preorder is false, then ingore this value
 }
 
 type ItemWholesale struct {
@@ -637,7 +637,12 @@ func (s *ProductServiceOp)DeleteModel(sid, itemID, modelID uint64, tok string) (
 
 type UpdateModelRequest struct {
 	ItemID uint64 `json:"item_id"`
-	Model []Model `json:"model"`
+	Model []UpdateModelRequestData `json:"model"`
+}
+
+type UpdateModelRequestData struct {
+	ModelID uint64 `json:"model_id"`
+	ModelSKU string `json:"model_sku"`
 }
 
 // TODO: response is too simple? https://open.shopee.com/documents?module=89&type=1&id=648&version=2
