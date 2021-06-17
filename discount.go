@@ -45,9 +45,9 @@ type AddDiscountItemRequest struct {
 type AddDiscountItemRequestData struct {
 	ItemID uint64 `json:"item_id"`
 	ModelList []AddDiscountItemRequestDataModel `json:"model_list"`
-	ItemPromotionPrice float64 `json:"item_promotion_price"`
+	ItemPromotionPrice *float64 `json:"item_promotion_price,omitempty"`
 	PurchaseLimit int `json:"purchase_limit"`
-	ItemPromotionStock int `json:"item_promotion_stock"`
+	ItemPromotionStock *int `json:"item_promotion_stock,omitempty"`
 }
 
 type AddDiscountItemRequestDataModel struct {
