@@ -28,7 +28,7 @@ import (
 const (
 	UserAgent = "goshopee.v2/1.0.0"
 
-	defaultHttpTimeout   = 10
+	defaultHttpTimeout = 10
 )
 
 // App represents basic app settings such as Api key, secret, scope, and redirect url.
@@ -63,19 +63,20 @@ type Client struct {
 
 	RateLimits RateLimitInfo
 
-	ShopID uint64
-	AccountID uint64
+	ShopID      uint64
+	MerchantID  uint64
 	AccessToken string
 
 	// Services used for communicating with the API
-	Util UtilService
-	Auth AuthService
-	Media MediaSpaceService
-	Product ProductService
+	Util      UtilService
+	Auth      AuthService
+	Media     MediaSpaceService
+	Product   ProductService
 	Logistics LogisticsService
-	Shop ShopService
-	Discount DiscountService
-	Order OrderService
+	Shop      ShopService
+	Discount  DiscountService
+	Order     OrderService
+	Merchant  MerchantService
 }
 
 // NewClient returns a new Shopify API client with an already authenticated shopname and
@@ -89,21 +90,22 @@ func NewClient(app App, opts ...Option) *Client {
 	}
 
 	c := &Client{
-		Client:     &http.Client{},
-		log:        &LeveledLogger{},
-		app:        app,
-		baseURL:    baseURL,
+		Client:  &http.Client{},
+		log:     &LeveledLogger{},
+		app:     app,
+		baseURL: baseURL,
 	}
 
 	c.Util = &UtilServiceOp{client: c}
 	c.Auth = &AuthServiceOp{client: c}
-	c.Media=&MediaSpaceServiceOp{client: c}
-	c.Product=&ProductServiceOp{client: c}
-	c.Logistics=&LogisticsServiceOp{client: c}
-	c.Shop=&ShopServiceOp{client: c}
-	c.Discount=&DiscountServiceOp{client: c}
-	c.Order=&OrderServiceOp{client: c}
-	
+	c.Media = &MediaSpaceServiceOp{client: c}
+	c.Product = &ProductServiceOp{client: c}
+	c.Logistics = &LogisticsServiceOp{client: c}
+	c.Shop = &ShopServiceOp{client: c}
+	c.Discount = &DiscountServiceOp{client: c}
+	c.Order = &OrderServiceOp{client: c}
+	c.Merchant = &MerchantServiceOp{client: c}
+
 	// apply any options
 	for _, opt := range opts {
 		opt(c)
@@ -220,55 +222,60 @@ func (c *Client) NewRequest(method, relPath string, body, options, headers inter
 	return req, nil
 }
 
-func (c *Client)WithShop(sid uint64, tok string) *Client {
-	c.ShopID=sid
-	c.AccessToken=tok
+func (c *Client) WithShop(sid uint64, tok string) *Client {
+	c.ShopID = sid
+	c.AccessToken = tok
 	return c
 }
 
-func (c *Client)WithMerchant(aid uint64, tok string) *Client {
-	c.AccountID=aid
-	c.AccessToken=tok
+func (c *Client) WithMerchant(mid uint64, tok string) *Client {
+	c.MerchantID = mid
+	c.AccessToken = tok
+	return c
+}
+
+func (c *Client) WithToken(tok string) *Client {
+	c.AccessToken = tok
 	return c
 }
 
 // https://open.shopee.com/documents?module=87&type=2&id=58&version=2
-func (c *Client) makeSignature(req *http.Request) (string,int64) {
-	ts:=time.Now().Unix()
-	path:=req.URL.Path
+func (c *Client) makeSignature(req *http.Request) (string, int64) {
+	ts := time.Now().Unix()
+	path := req.URL.Path
 
 	var baseStr string
 
-	u:=req.URL
+	u := req.URL
 
-	query:=u.Query()
-	query.Add("partner_id",fmt.Sprintf("%v",c.app.PartnerID))
+	query := u.Query()
+	query.Add("partner_id", fmt.Sprintf("%v", c.app.PartnerID))
 
-	if c.ShopID!=0 {
+	if c.ShopID != 0 {
 		// Shop APIs: partner_id, api path, timestamp, access_token, shop_id
-		baseStr=fmt.Sprintf("%d%s%d%s%d",c.app.PartnerID,path,ts,c.AccessToken,c.ShopID)
-		query.Add("shop_id",fmt.Sprintf("%v",c.ShopID))
-		query.Add("access_token",c.AccessToken)
-	}else if c.AccountID!=0 {
+		baseStr = fmt.Sprintf("%d%s%d%s%d", c.app.PartnerID, path, ts, c.AccessToken, c.ShopID)
+		query.Add("shop_id", fmt.Sprintf("%v", c.ShopID))
+		query.Add("access_token", c.AccessToken)
+	} else if c.MerchantID != 0 {
 		// Merchant APIs: partner_id, api path, timestamp, access_token, merchant_id
-		baseStr=fmt.Sprintf("%d%s%d%s%d",c.app.PartnerID,path,ts,c.AccessToken,c.AccountID)
-		query.Add("main_account_id",fmt.Sprintf("%v",c.AccountID))
-		query.Add("access_token",c.AccessToken)
+		baseStr = fmt.Sprintf("%d%s%d%s%d", c.app.PartnerID, path, ts, c.AccessToken, c.MerchantID)
+		query.Add("merchant_id", fmt.Sprintf("%v", c.MerchantID))
+		query.Add("access_token", c.AccessToken)
 	} else {
 		// Public APIs: partner_id, api path, timestamp
-		baseStr=fmt.Sprintf("%d%s%d",c.app.PartnerID,path,ts)
+		baseStr = fmt.Sprintf("%d%s%d", c.app.PartnerID, path, ts)
 	}
 	h := hmac.New(sha256.New, []byte(c.app.PartnerKey))
 	h.Write([]byte(baseStr))
 	result := hex.EncodeToString(h.Sum(nil))
 
-	query.Add("timestamp",fmt.Sprintf("%v",ts))
-	query.Add("sign",result)
+	query.Add("timestamp", fmt.Sprintf("%v", ts))
+	query.Add("sign", result)
 
-	u.RawQuery=query.Encode()
-	req.URL=u
+	u.RawQuery = query.Encode()
+	req.URL = u
 
-	return result,ts
+	return result, ts
 }
 
 // doGetHeaders executes a request, decoding the response into `v` and also returns any response headers.
@@ -363,7 +370,7 @@ func (c *Client) logResponse(res *http.Response) {
 }
 
 func (c *Client) logBody(body *io.ReadCloser, format string) {
-	if body == nil || *body==nil{
+	if body == nil || *body == nil {
 		return
 	}
 	b, _ := ioutil.ReadAll(*body)
@@ -382,7 +389,7 @@ func wrapSpecificError(r *http.Response, err ResponseError) error {
 			RetryAfter:    int(f),
 		}
 	}
-	
+
 	// if err.Status == http.StatusSeeOther {
 	// todo
 	// The response to the request can be found under a different URL in the
@@ -400,8 +407,8 @@ func wrapSpecificError(r *http.Response, err ResponseError) error {
 // eg. {"error":"error_incalid_category.","message":"Invalid category ID","request_id":"2069449bd255af166cb52b0e15189d6d"}
 // {"error":"error_category_is_block.","message":"Category is restricted","request_id":"97994a47af37a22da79cb910bfd9841a"}
 func CheckResponseError(r *http.Response) error {
-	shopeeError:=struct {
-		Error string `json:"error"`
+	shopeeError := struct {
+		Error   string `json:"error"`
 		Message string `json:"message"`
 	}{}
 
@@ -412,7 +419,7 @@ func CheckResponseError(r *http.Response) error {
 
 	defer func() {
 		// already read out, reload for next process
-		r.Body=ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
+		r.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
 	}()
 
 	if len(bodyBytes) > 0 {
@@ -432,7 +439,7 @@ func CheckResponseError(r *http.Response) error {
 
 	responseError := ResponseError{
 		Status:  r.StatusCode,
-		Message: fmt.Sprintf("shopee-%s [%s]",shopeeError.Error,shopeeError.Message),
+		Message: fmt.Sprintf("shopee-%s [%s]", shopeeError.Error, shopeeError.Message),
 	}
 
 	return wrapSpecificError(r, responseError)
@@ -448,11 +455,11 @@ func CheckResponseError(r *http.Response) error {
 // parameters like created_at_min
 // Any data returned from Shopify will be marshalled into resource argument.
 func (c *Client) CreateAndDo(method, relPath string, data, options, headers, resource interface{}) error {
-	defer func(){
+	defer func() {
 		// clear for next call
-		c.ShopID=0
-		c.AccountID=0
-		c.AccessToken=""
+		c.ShopID = 0
+		c.MerchantID = 0
+		c.AccessToken = ""
 	}()
 
 	_, err := c.createAndDoGetHeaders(method, relPath, data, options, headers, resource)
@@ -474,7 +481,7 @@ func (c *Client) createAndDoGetHeaders(method, relPath string, data, options, he
 	if data != nil {
 		params := data.(map[string]interface{})
 		params["partner_id"] = c.app.PartnerID
-		data=params
+		data = params
 	}
 
 	req, err := c.NewRequest(method, relPath, data, options, headers)
@@ -516,7 +523,7 @@ func (c *Client) Upload(relPath, fieldname, filename string, resource interface{
 		return err
 	}
 
-	if _, err:=c.doGetHeaders(req, resource, true);err!=nil {
+	if _, err := c.doGetHeaders(req, resource, true); err != nil {
 		return err
 	}
 	return nil
@@ -538,7 +545,7 @@ func (c *Client) NewfileUploadRequest(relPath, paramName, filename string) (*htt
 
 	// Make the full url based on the relative path
 	u := c.baseURL.ResolveReference(rel)
-	uri:=u.String()
+	uri := u.String()
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -553,8 +560,8 @@ func (c *Client) NewfileUploadRequest(relPath, paramName, filename string) (*htt
 	if err != nil {
 		return nil, err
 	}
-	if _, err = io.Copy(part, file);err!=nil {
-		return nil,err
+	if _, err = io.Copy(part, file); err != nil {
+		return nil, err
 	}
 
 	err = writer.Close()
@@ -562,8 +569,8 @@ func (c *Client) NewfileUploadRequest(relPath, paramName, filename string) (*htt
 		return nil, err
 	}
 
-	req,err:= http.NewRequest("POST", uri, body)
-	if err!=nil {
+	req, err := http.NewRequest("POST", uri, body)
+	if err != nil {
 		return nil, err
 	}
 
@@ -575,4 +582,3 @@ func (c *Client) NewfileUploadRequest(relPath, paramName, filename string) (*htt
 
 	return req, nil
 }
-
