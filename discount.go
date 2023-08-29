@@ -2,6 +2,7 @@ package goshopee
 
 type DiscountService interface {
 	GetDiscountList(uint64, GetDiscountListRequest, string) (*GetDiscountListResponse, error)
+	GetDiscount(uint64, GetDiscountRequest, string) (*GetDiscountResponse, error)
 	AddDiscount(uint64, AddDiscountRequest, string) (*AddDiscountResponse, error)
 	AddDiscountItem(uint64, AddDiscountItemRequest, string) (*AddDiscountItemResponse, error)
 	DeleteDiscountItem(uint64, uint64, uint64, uint64, string) (*DeleteDiscountItemResponse, error)
@@ -10,6 +11,63 @@ type DiscountService interface {
 
 type DiscountServiceOp struct {
 	client *Client
+}
+
+// v2.discount.get_discount
+// https://open.shopee.cn/documents/v2/v2.discount.get_discount?module=99&type=1
+
+type GetDiscountRequest struct {
+	DiscountID uint64 `json:"discount_id"`
+	PageNo     int    `json:"page_no"`
+	PageSize   int    `json:"page_size"`
+}
+
+type GetDiscountResponse struct {
+	BaseResponse
+
+	Response GetDiscountResponseData `json:"response"`
+}
+
+type GetDiscountResponseData struct {
+	Status       string                        `json:"status"`
+	DiscountName string                        `json:"discount_name"`
+	ItemList     []GetDiscountResponseDataItem `json:"item_list"`
+	StartTime    int64                         `json:"start_time"`
+	EndTime      int64                         `json:"end_time"`
+	DiscountID   uint64                        `json:"discount_id"`
+	More         bool                          `json:"more"`
+}
+
+type GetDiscountResponseDataItem struct {
+	ItemPromotionPrice                float64                            `json:"item_promotion_price"`
+	ItemName                          string                             `json:"item_name"`
+	ItemID                            uint64                             `json:"item_id"`
+	PurchaseLimit                     int                                `json:"purchase_limit"`
+	ItemOriginalPrice                 float64                            `json:"item_original_price"`
+	NormalStock                       int                                `json:"normal_stock"`
+	ItemInflatedPriceOfOriginalPrice  float64                            `json:"item_inflated_price_of_original_price"`
+	ItemInflatedPriceOfPromotionPrice float64                            `json:"item_inflated_price_of_promotion_price"`
+	ItemPromotionStock                int                                `json:"item_promotion_stock"`
+	ModelList                         []GetDiscountResponseDataItemModel `json:"model_list"`
+}
+
+type GetDiscountResponseDataItemModel struct {
+	ModelName                          string  `json:"model_name"`
+	ModelID                            uint64  `json:"model_id"`
+	ModelNomalStock                    int     `json:"model_nomal_stock"`
+	ModelOriginalPrice                 float64 `json:"model_original_price"`
+	ModelPromotionPrice                float64 `json:"model_promotion_price"`
+	ModelInflatedPriceOfOriginalPrice  float64 `json:"model_inflated_price_of_original_price"`
+	ModelInflatedPriceOfPromotionPrice float64 `json:"model_inflated_price_of_promotion_price"`
+	ModelPromotionStock                int     `json:"model_promotion_stock"`
+}
+
+func (s *DiscountServiceOp) GetDiscount(sid uint64, opt GetDiscountRequest, tok string) (*GetDiscountResponse, error) {
+	path := "/discount/get_discount"
+
+	resp := new(GetDiscountResponse)
+	err := s.client.WithShop(sid, tok).Get(path, resp, opt)
+	return resp, err
 }
 
 // v2.discount.get_discount_list

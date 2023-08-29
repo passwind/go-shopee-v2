@@ -7,6 +7,29 @@ import (
 	"github.com/jarcoal/httpmock"
 )
 
+func Test_GetDiscountDetail(t *testing.T) {
+	setup()
+	defer teardown()
+
+	httpmock.RegisterResponder("GET", fmt.Sprintf("%s/api/v2/discount/get_discount", app.APIURL),
+		httpmock.NewBytesResponder(200, loadFixture("get_discount_resp.json")))
+
+	var req GetDiscountRequest
+	loadMockData("get_discount_req.json", &req)
+
+	res, err := client.Discount.GetDiscount(shopID, req, accessToken)
+	if err != nil {
+		t.Errorf("Discount.GetDiscountDetail error: %s", err)
+	}
+
+	t.Logf("Discount.GetDiscount: %#v", res)
+
+	var expectedID uint64 = 665123666665499
+	if res.Response.DiscountID != expectedID {
+		t.Errorf("DiscountID returned %+v, expected %+v", res.Response.DiscountID, expectedID)
+	}
+}
+
 func Test_GetDiscountList(t *testing.T) {
 	setup()
 	defer teardown()

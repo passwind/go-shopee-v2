@@ -1,0 +1,35 @@
+{
+  "message": "",
+  "request_id": "ca18250882299517bebf00c4d3c9009a",
+  "response": {
+      "status": "ongoing",
+      "item_list": [
+          {
+              "item_promotion_price": 0,
+              "item_name": "Test product ydgiuhduhoaijdoijaudjs",
+              "model_list": [
+                  {
+                      "model_id": 10004228693,
+                      "model_promotion_price": 960,
+                      "model_original_price": 1000,
+                      "model_normal_stock": 1000,
+                      "model_name": "white,L",
+                      "model_promotion_stock": 0
+                  }
+              ],
+              "item_promotion_stock": 0,
+              "normal_stock": 4000,
+              "item_id": 800238393,
+              "purchase_limit": 2,
+              "item_original_price": 0
+          }
+      ],
+      "discount_name": "The test dicount 001",
+      "start_time": 1658198310,
+      "discount_id": 665123666665499,
+      "source": 0,
+      "end_time": 1659148710,
+      "more": false
+  },
+  "error": ""
+}
