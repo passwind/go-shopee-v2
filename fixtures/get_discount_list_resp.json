@@ -1,0 +1,34 @@
+{
+  "message": "",
+  "request_id": "2e922c7e07fd8c9f6c8481b3b8d3d2fe",
+  "response": {
+      "discount_list": [
+          {
+              "status": "ongoing",
+              "discount_name": "testqwert001",
+              "start_time": 1644910200,
+              "discount_id": 1000021581,
+              "source": 0,
+              "end_time": 1645864200
+          },
+          {
+              "status": "ongoing",
+              "discount_name": "testqwerty002",
+              "start_time": 1644910200,
+              "discount_id": 1000021582,
+              "source": 0,
+              "end_time": 1646037000
+          },
+          {
+              "status": "ongoing",
+              "discount_name": "testasdfgxcvyt003",
+              "start_time": 1644909420,
+              "discount_id": 1000021583,
+              "source": 0,
+              "end_time": 1645173000
+          }
+      ],
+      "more": false
+  },
+  "error": ""
+}

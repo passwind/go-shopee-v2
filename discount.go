@@ -1,6 +1,7 @@
 package goshopee
 
 type DiscountService interface {
+	GetDiscountList(uint64, GetDiscountListRequest, string) (*GetDiscountListResponse, error)
 	AddDiscount(uint64, AddDiscountRequest, string) (*AddDiscountResponse, error)
 	AddDiscountItem(uint64, AddDiscountItemRequest, string) (*AddDiscountItemResponse, error)
 	DeleteDiscountItem(uint64, uint64, uint64, uint64, string) (*DeleteDiscountItemResponse, error)
@@ -9,6 +10,58 @@ type DiscountService interface {
 
 type DiscountServiceOp struct {
 	client *Client
+}
+
+// v2.discount.get_discount_list
+// https://open.shopee.cn/documents/v2/v2.discount.get_discount_list?module=99&type=1
+
+const (
+	DiscountStatusUpcoming = "upcoming"
+	DiscountStatusOngoing  = "ongoing"
+	DiscountStatusExpired  = "expired"
+	DiscountStatusAll      = "all"
+)
+
+type GetDiscountListRequest struct {
+	DiscountStatus string `json:"discount_status"`
+	PageNo         int    `json:"page_no"`
+	PageSize       int    `json:"page_size"`
+	UpdateTimeFrom int64  `json:"update_time_from"`
+	UpdateTimeTo   int64  `json:"update_time_to"`
+}
+
+type GetDiscountListResponse struct {
+	BaseResponse
+
+	Response GetDiscountListResponseData `json:"response"`
+}
+
+type GetDiscountListResponseData struct {
+	DiscountList []GetDiscountListResponseDataDiscount `json:"discount_list"`
+	More         bool                                  `json:"more"`
+}
+
+const (
+	DiscountSourceOthers     = 0
+	DiscountSourceAdmin      = 1
+	DiscountSourceLiveStream = 7
+)
+
+type GetDiscountListResponseDataDiscount struct {
+	Status       string `json:"status"`
+	DiscountName string `json:"discount_name"`
+	StartTime    int64  `json:"start_time"`
+	EndTime      int64  `json:"end_time"`
+	DiscountID   uint64 `json:"discount_id"`
+	Source       int    `json:"source"`
+}
+
+func (s *DiscountServiceOp) GetDiscountList(sid uint64, opt GetDiscountListRequest, tok string) (*GetDiscountListResponse, error) {
+	path := "/discount/get_discount_list"
+
+	resp := new(GetDiscountListResponse)
+	err := s.client.WithShop(sid, tok).Get(path, resp, opt)
+	return resp, err
 }
 
 type AddDiscountRequest struct {
